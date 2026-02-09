@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IronLog — Wireframes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background: #1a1a2e;
+    }
+
+    .phone-frame {
+      width: 390px;
+      min-height: 844px;
+      background: #0f0f1a;
+      border: 2px solid #2a2a4a;
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+      color: #e0e0e0;
+    }
+
+    .screen-label {
+      font-family: 'IBM Plex Mono', monospace;
+      color: #6366f1;
+      font-size: 14px;
+      letter-spacing: 0.05em;
+    }
+
+    .screen-description {
+      color: #8888aa;
+      font-size: 13px;
+      line-height: 1.5;
+      max-width: 390px;
+    }
+
+    /* Timer gradient */
+    .timer-countdown {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 1px solid #334155;
+    }
+    .timer-overage {
+      background: linear-gradient(135deg, #451a03, #1c0a00);
+      border: 1px solid #92400e;
+    }
+
+    /* Input fields */
+    .input-field {
+      background: #1e1e36;
+      border: 1px solid #3a3a5c;
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: #fff;
+      font-size: 18px;
+      font-family: 'IBM Plex Mono', monospace;
+      text-align: center;
+      width: 100%;
+    }
+    .input-field:focus {
+      border-color: #6366f1;
+      outline: none;
+    }
+
+    /* Last session card */
+    .last-session {
+      background: #1a1a30;
+      border: 1px solid #2a2a4a;
+      border-radius: 12px;
+      opacity: 0.75;
+    }
+
+    /* Muscle group badges */
+    .badge-lats { background: #1e3a5f; color: #60a5fa; }
+    .badge-pecs { background: #5f1e1e; color: #f87171; }
+    .badge-biceps { background: #1e5f3a; color: #4ade80; }
+    .badge-triceps { background: #5f4b1e; color: #fbbf24; }
+    .badge-delts { background: #4b1e5f; color: #c084fc; }
+    .badge-legs { background: #1e5f5f; color: #2dd4bf; }
+
+    /* Progress pill */
+    .progress-up { color: #4ade80; }
+    .progress-same { color: #fbbf24; }
+    .progress-down { color: #f87171; }
+
+    /* Grid table */
+    .grid-table { font-family: 'IBM Plex Mono', monospace; font-size: 11px; }
+    .grid-table th { color: #6366f1; font-weight: 600; }
+    .grid-table td { color: #b0b0cc; }
+
+    /* Nav bar */
+    .bottom-nav {
+      background: #12122a;
+      border-top: 1px solid #2a2a4a;
+    }
+    .nav-item { color: #555580; font-size: 11px; }
+    .nav-item.active { color: #6366f1; }
+
+    /* Button styles */
+    .btn-primary {
+      background: #6366f1;
+      color: white;
+      font-weight: 600;
+      border-radius: 12px;
+      padding: 16px 32px;
+      font-size: 18px;
+      width: 100%;
+      text-align: center;
+    }
+    .btn-secondary {
+      background: transparent;
+      color: #6366f1;
+      border: 1px solid #6366f1;
+      font-weight: 500;
+      border-radius: 12px;
+      padding: 12px 24px;
+      font-size: 14px;
+      text-align: center;
+    }
+    .btn-ghost {
+      background: transparent;
+      color: #8888aa;
+      font-weight: 500;
+      padding: 8px 16px;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    /* Skip button */
+    .btn-skip {
+      background: transparent;
+      color: #f87171;
+      border: 1px solid #5f1e1e;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 13px;
+    }
+
+    /* Set row */
+    .set-row {
+      background: #1a1a30;
+      border-radius: 8px;
+      padding: 8px 12px;
+    }
+    .set-row.current {
+      background: #1e1e3a;
+      border: 1px solid #6366f1;
+    }
+    .set-row.completed {
+      opacity: 0.5;
+    }
+
+    /* RPE selector */
+    .rpe-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: #1e1e36;
+      border: 1px solid #3a3a5c;
+      color: #8888aa;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .rpe-btn.selected {
+      background: #6366f1;
+      border-color: #6366f1;
+      color: white;
+    }
+
+    /* Skipped exercise */
+    .skipped {
+      opacity: 0.35;
+      text-decoration: line-through;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-8">
+
+  <!-- DOCUMENT HEADER -->
+  <div class="max-w-4xl mx-auto mb-16">
+    <h1 style="font-family: 'IBM Plex Mono', monospace; color: #6366f1; font-size: 32px; font-weight: 700;">IronLog</h1>
+    <p style="color: #6670cc; font-size: 16px; margin-top: 4px;">UI Wireframes — v1.0</p>
+    <p style="color: #555580; font-size: 13px; margin-top: 12px; max-width: 600px; line-height: 1.6;">
+      These wireframes define the layout, component hierarchy, and interaction patterns for each screen.
+      All screens are shown at 390×844px (iPhone 14 / typical Android viewport).
+      The visual design (colors, fonts, spacing) shown here is illustrative — the implementation
+      should follow the same layout structure but can refine the aesthetics.
+    </p>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 1: HOME — WORKOUT DAY               -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="max-w-4xl mx-auto mb-20">
+    <div class="mb-4">
+      <span class="screen-label">SCREEN 1A</span>
+      <h2 style="color: #e0e0e0; font-size: 20px; font-weight: 600; margin-top: 4px;">Home — Workout Day</h2>
+      <p class="screen-description mt-2">
+        Default view when opening the app on a day with a scheduled workout.
+        Shows today's program day and a preview of exercises. The "Start Workout" button
+        creates a new workout session and enters the wizard flow.
+      </p>
+    </div>
+
+    <div class="phone-frame">
+      <div class="p-6 pt-14">
+        <!-- Date & Day -->
+        <div class="text-center mb-8">
+          <div style="color: #555580; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase;">Sunday</div>
+          <div style="color: #e0e0e0; font-size: 28px; font-weight: 700; margin-top: 4px;">Jan 25, 2026</div>
+        </div>
+
+        <!-- Today's Workout Preview -->
+        <div style="background: #1a1a30; border: 1px solid #2a2a4a; border-radius: 16px; padding: 20px;" class="mb-6">
+          <div style="color: #8888aa; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px;">Today's Workout</div>
+
+          <div class="flex items-center gap-3 mb-4">
+            <span class="badge-lats px-2 py-1 rounded text-xs font-medium">lats</span>
+            <span style="color: #c0c0d8; font-size: 14px;">Inverse Rows — 4 sets</span>
+          </div>
+          <div class="flex items-center gap-3 mb-4">
+            <span class="badge-biceps px-2 py-1 rounded text-xs font-medium">biceps</span>
+            <span style="color: #c0c0d8; font-size: 14px;">DB Concentration Curls — 4 sets</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="badge-legs px-2 py-1 rounded text-xs font-medium">legs</span>
+            <span style="color: #c0c0d8; font-size: 14px;">Stairs — 4 sets</span>
+          </div>
+        </div>
+
+        <!-- Start Button -->
+        <button class="btn-primary mb-4">Start Workout</button>
+
+        <!-- Last workout info -->
+        <div class="text-center" style="color: #555580; font-size: 12px;">
+          Last workout: Friday, Jan 24 — 3 days ago
+        </div>
+      </div>
+
+      <!-- Bottom Nav -->
+      <div class="bottom-nav absolute bottom-0 left-0 right-0 flex justify-around py-4 px-6">
+        <div class="nav-item active text-center">
+          <div style="font-size: 20px;">⏱</div>
+          <div>Workout</div>
+        </div>
+        <div class="nav-item text-center">
+          <div style="font-size: 20px;">📋</div>
+          <div>History</div>
+        </div>
+        <div class="nav-item text-center">
+          <div style="font-size: 20px;">⚙</div>
+          <div>Program</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 1B: HOME — REST DAY                  -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="max-w-4xl mx-auto mb-20">
+    <div class="mb-4">
+      <span class="screen-label">SCREEN 1B</span>
+      <h2 style="color: #e0e0e0; font-size: 20px; font-weight: 600; margin-top: 4px;">Home — Rest Day</h2>
+      <p class="screen-description mt-2">
+        Displayed on Saturday (rest day). No workout option. Just a message.
+      </p>
+    </div>
+
+    <div class="phone-frame">
+      <div class="p-6 pt-14">
+        <div class="text-center mb-8">
+          <div style="color: #555580; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase;">Saturday</div>
+          <div style="color: #e0e0e0; font-size: 28px; font-weight: 700; margin-top: 4px;">Jan 31, 2026</div>
+        </div>
+
+        <div class="text-center" style="margin-top: 120px;">
+          <div style="font-size: 48px; margin-bottom: 16px;">💤</div>
+          <div style="color: #8888aa; font-size: 18px; font-weight: 500;">Rest Day</div>
+          <div style="color: #555580; font-size: 13px; margin-top: 8px;">Recovery is part of the process.</div>
+        </div>
+      </div>
+
+      <!-- Bottom Nav -->
+      <div class="bottom-nav absolute bottom-0 left-0 right-0 flex justify-around py-4 px-6">
+        <div class="nav-item active text-center">
+          <div style="font-size: 20px;">⏱</div>
+          <div>Workout</div>
+        </div>
+        <div class="nav-item text-center">
+          <div style="font-size: 20px;">📋</div>
+          <div>History</div>
+        </div>
+        <div class="nav-item text-center">
+          <div style="font-size: 20px;">⚙</div>
+          <div>Program</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 1C: HOME — RESUME WORKOUT            -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="max-w-4xl mx-auto mb-20">
+    <div class="mb-4">
+      <span class="screen-label">SCREEN 1C</span>
+      <h2 style="color: #e0e0e0; font-size: 20px; font-weight: 600; margin-top: 4px;">Home — Resume In-Progress Workout</h2>
+      <p class="screen-description mt-2">
+        If the user previously started a workout today but didn't finish, this state
+        replaces "Start Workout" with a "Resume Workout" button showing progress so far.
+      </p>
+    </div>
+
+    <div class="phone-frame">
+      <div class="p-6 pt-14">
+        <div class="text-center mb-8">
+          <div style="color: #555580; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase;">Sunday</div>
+          <div style="color: #e0e0e0; font-size: 28px; font-weight: 700; margin-top: 4px;">Jan 25, 2026</div>
+        </div>
+
+        <div style="background: #1a1a30; border: 1px solid #2a2a4a; border-radius: 16px; padding: 20px;" class="mb-6">
+          <div style="color: #fbbf24; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px;">⏳ Workout In Progress</div>
+
+          <div class="flex items-center gap-3 mb-4">
+            <span class="badge-lats px-2 py-1 rounded text-xs font-medium">lats</span>
+            <span style="color: #4ade80; font-size: 14px;">✓ Inverse Rows — done</span>
+          </div>
+          <div class="flex items-center gap-3 mb-4">
+            <span class="badge-biceps px-2 py-1 rounded text-xs font-medium">biceps</span>
+            <span style="color: #fbbf24; font-size: 14px;">● DB Concentration Curls — set 2 of 4</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="badge-legs px-2 py-1 rounded text-xs font-medium">legs</span>
+            <span style="color: #555580; font-size: 14px;">Stairs — not started</span>
+          </div>
+        </div>
+
+        <button class="btn-primary mb-4" style="background: #d97706;">Resume Workout</button>
+      </div>
+
+      <div class="bottom-nav absolute bottom-0 left-0 right-0 flex justify-around py-4 px-6">
+        <div class="nav-item active text-center">
+          <div style="font-size: 20px;">⏱</div>
+          <div>Workout</div>
+        </div>
+        <div class="nav-item text-center">
+          <div style="font-size: 20px;">📋</div>
+          <div>History</div>
+        </div>
+        <div class="nav-item text-center">
+          <div style="font-size: 20px;">⚙</div>
+          <div>Program</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 2: ACTIVE WORKOUT — EXERCISE VIEW    -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="max-w-4xl mx-auto mb-20">
+    <div class="mb-4">
+      <span class="screen-label">SCREEN 2A</span>
+      <h2 style="color: #e0e0e0; font-size: 20px; font-weight: 600; margin-top: 4px;">Active Workout — Exercise View (Logging a Set)</h2>
+      <p class="screen-description mt-2">
+        The core workout screen. Shows one exercise at a time. The "last session" card provides
+        progressive load context. Input fields are pre-filled with last session's weight and reps
+        (RPE is never pre-filled). After logging a set, the timer auto-starts.
+      </p>
+    </div>
+
+    <div class="phone-frame">
+      <div class="p-5 pt-10">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-1">
+          <div style="color: #555580; font-size: 12px;">Exercise 1 of 3</div>
+          <button class="btn-skip">Skip</button>
+        </div>
+        <div class="flex items-center gap-3 mb-1">
+          <h2 style="color: #fff; font-size: 22px; font-weight: 700;">Inverse Rows</h2>
+        </div>
+        <span class="badge-lats px-2 py-1 rounded text-xs font-medium inline-block mb-5">lats</span>
+
+        <!-- Last Session Card -->
+        <div class="last-session p-4 mb-5">
+          <div class="flex items-center justify-between mb-3">
+            <div style="color: #6366f1; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;">Last Session — Jan 22</div>
+            <a href="#" style="color: #6366f1; font-size: 11px; text-decoration: underline;">History →</a>
+          </div>
+          <div class="grid grid-cols-4 gap-2 text-center" style="font-family: 'IBM Plex Mono', monospace; font-size: 12px;">
+            <div>
+              <div style="color: #555580; font-size: 10px; margin-bottom: 4px;">SET 1</div>
+              <div style="color: #8888aa;">95 lbs</div>
+              <div style="color: #8888aa;">8 reps</div>
+              <div style="color: #555580;">RPE 6</div>
+            </div>
+            <div>
+              <div style="color: #555580; font-size: 10px; margin-bottom: 4px;">SET 2</div>
+              <div style="color: #8888aa;">95 lbs</div>
+              <div style="color: #8888aa;">8 reps</div>
+              <div style="color: #555580;">RPE 7</div>
+            </div>
+            <div>
+              <div style="color: #555580; font-size: 10px; margin-bottom: 4px;">SET 3</div>
+              <div style="color: #8888aa;">95 lbs</div>
+              <div style="color: #8888aa;">7 reps</div>
+              <div style="color: #555580;">RPE 8</div>
+            </div>
+            <div>
+              <div style="color: #555580; font-size: 10px; margin-bottom: 4px;">SET 4</div>
+              <div style="color: #8888aa;">95 lbs</div>
+              <div style="color: #8888aa;">6 reps</div>
+              <div style="color: #555580;">RPE 9</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Current Set -->
+        <div class="mb-4">
+          <div style="color: #e0e0e0; font-size: 16px; font-weight: 600; margin-bottom: 12px;">Set 2 of 4</div>
+
+          <!-- Completed set 1 -->
+          <div class="set-row completed flex items-center justify-between mb-2">
+            <span style="font-size: 12px; color: #555580;">Set 1</span>
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #555580;">95 lbs × 9 reps @ RPE 7</span>
+            <span style="color: #4ade80; font-size: 12px;">✓</span>
+          </div>
+
+          <!-- Current set input -->
+          <div class="set-row current p-4 mb-2">
+            <div style="color: #6366f1; font-size: 11px; font-weight: 600; margin-bottom: 12px;">SET 2 — NOW</div>
+            <div class="grid grid-cols-2 gap-3 mb-4">
+              <div>
+                <label style="color: #8888aa; font-size: 11px; display: block; margin-bottom: 4px;">Weight (lbs)</label>
+                <input type="number" class="input-field" value="95" />
+              </div>
+              <div>
+                <label style="color: #8888aa; font-size: 11px; display: block; margin-bottom: 4px;">Reps</label>
+                <input type="number" class="input-field" value="8" />
+              </div>
+            </div>
+
+            <!-- RPE selector -->
+            <div>
+              <label style="color: #8888aa; font-size: 11px; display: block; margin-bottom: 8px;">RPE</label>
+              <div class="flex gap-2 justify-between">
+                <div class="rpe-btn">7</div>
+                <div class="rpe-btn">7.5</div>
+                <div class="rpe-btn selected">8</div>
+                <div class="rpe-btn">8.5</div>
+                <div class="rpe-btn">9</div>
+                <div class="rpe-btn">9.5</div>
+                <div class="rpe-btn">10</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Upcoming sets (dimmed) -->
+          <div class="set-row flex items-center justify-between mb-2" style="opacity: 0.3;">
+            <span style="font-size: 12px; color: #555580;">Set 3</span>
+            <span style="font-size: 12px; color: #555580;">—</span>
+            <span></span>
+          </div>
+          <div class="set-row flex items-center justify-between mb-2" style="opacity: 0.3;">
+            <span style="font-size: 12px; color: #555580;">Set 4</span>
+            <span style="font-size: 12px; color: #555580;">—</span>
+            <span></span>
+          </div>
+        </div>
+
+        <!-- Log Set Button -->
+        <button class="btn-primary">Log Set</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 2B: ACTIVE WORKOUT — TIMER COUNTDOWN -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="max-w-4xl mx-auto mb-20">
+    <div class="mb-4">
+      <span class="screen-label">SCREEN 2B</span>
+      <h2 style="color: #e0e0e0; font-size: 20px; font-weight: 600; margin-top: 4px;">Active Workout — Rest Timer (Countdown)</h2>
+      <p class="screen-description mt-2">
+        After logging a set, the timer auto-starts counting down from the prescribed rest
+        (2:00 or 3:00). The timer is prominent but doesn't block the screen — the user
+        can still see exercise context. Vibrate + tone at zero.
+      </p>
+    </div>
+
+    <div class="phone-frame">
+      <div class="p-5 pt-10">
+        <!-- Header (same as exercise view) -->
+        <div class="flex items-center justify-between mb-1">
+          <div style="color: #555580; font-size: 12px;">Exercise 1 of 3</div>
+          <button class="btn-skip">Skip</button>
+        </div>
+        <div class="flex items-center gap-3 mb-1">
+          <h2 style="color: #fff; font-size: 22px; font-weight: 700;">Inverse Rows</h2>
+        </div>
+        <span class="badge-lats px-2 py-1 rounded text-xs font-medium inline-block mb-5">lats</span>
+
+        <!-- Completed sets summary -->
+        <div class="set-row completed flex items-center justify-between mb-2">
+          <span style="font-size: 12px; color: #555580;">Set 1</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #555580;">95 lbs × 9 reps @ RPE 7</span>
+          <span style="color: #4ade80; font-size: 12px;">✓</span>
+        </div>
+        <div class="set-row completed flex items-center justify-between mb-2">
+          <span style="font-size: 12px; color: #555580;">Set 2</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #555580;">95 lbs × 8 reps @ RPE 7</span>
+          <span style="color: #4ade80; font-size: 12px;">✓</span>
+        </div>
+
+        <!-- TIMER — COUNTDOWN -->
+        <div class="timer-countdown rounded-2xl p-6 text-center my-6">
+          <div style="color: #555580; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px;">Rest — 2:00 prescribed</div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 64px; font-weight: 700; color: #e0e0e0; line-height: 1;">
+            1:23
+          </div>
+          <div style="color: #555580; font-size: 12px; margin-top: 8px;">Next: Set 3 of 4</div>
+        </div>
+
+        <!-- Upcoming sets -->
+        <div class="set-row current flex items-center justify-between mb-2">
+          <span style="font-size: 12px; color: #6366f1; font-weight: 600;">Set 3</span>
+          <span style="font-size: 12px; color: #6366f1;">Up next</span>
+          <span></span>
+        </div>
+        <div class="set-row flex items-center justify-between mb-2" style="opacity: 0.3;">
+          <span style="font-size: 12px; color: #555580;">Set 4</span>
+          <span style="font-size: 12px; color: #555580;">—</span>
+          <span></span>
+        </div>
+
+        <!-- Dismiss timer -->
+        <div class="text-center mt-4">
+          <button class="btn-ghost">Dismiss Timer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 2C: ACTIVE WORKOUT — TIMER OVERAGE   -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="max-w-4xl mx-auto mb-20">
+    <div class="mb-4">
+      <span class="screen-label">SCREEN 2C</span>
+      <h2 style="color: #e0e0e0; font-size: 20px; font-weight: 600; margin-top: 4px;">Active Workout — Rest Timer (Overage / Stopwatch)</h2>
+      <p class="screen-description mt-2">
+        When the countdown reaches zero, the timer flips to counting UP as a stopwatch.
+        The visual changes to an amber/warning state. The overage time is clearly labeled.
+        The total rest (prescribed + overage) is recorded when the user logs the next set.
+      </p>
+    </div>
+
+    <div class="phone-frame">
+      <div class="p-5 pt-10">
+        <div class="flex items-center justify-between mb-1">
+          <div style="color: #555580; font-size: 12px;">Exercise 1 of 3</div>
+          <button class="btn-skip">Skip</button>
+        </div>
+        <div class="flex items-center gap-3 mb-1">
+          <h2 style="color: #fff; font-size: 22px; font-weight: 700;">Inverse Rows</h2>
+        </div>
+        <span class="badge-lats px-2 py-1 rounded text-xs font-medium inline-block mb-5">lats</span>
+
+        <!-- Completed sets -->
+        <div class="set-row completed flex items-center justify-between mb-2">
+          <span style="font-size: 12px; color: #555580;">Set 1</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #555580;">95 lbs × 9 reps @ RPE 7</span>
+          <span style="color: #4ade80; font-size: 12px;">✓</span>
+        </div>
+        <div class="set-row completed flex items-center justify-between mb-2">
+          <span style="font-size: 12px; color: #555580;">Set 2</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #555580;">95 lbs × 8 reps @ RPE 7</span>
+          <span style="color: #4ade80; font-size: 12px;">✓</span>
+        </div>
+
+        <!-- TIMER — OVERAGE -->
+        <div class="timer-overage rounded-2xl p-6 text-center my-6">
+          <div style="color: #92400e; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px;">⚠ Over prescribed rest (2:00)</div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 64px; font-weight: 700; color: #fbbf24; line-height: 1;">
+            +3:22
+          </div>
+          <div style="color: #92400e; font-size: 12px; margin-top: 8px;">Total rest: 5:22</div>
+        </div>
+
+        <!-- Next set indicator -->
+        <div class="set-row current flex items-center justify-between mb-2">
+          <span style="font-size: 12px; color: #d97706; font-weight: 600;">Set 3</span>
+          <span style="font-size: 12px; color: #d97706;">Ready when you are</span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 2D: EXERCISE COMPLETE — ADD OR NEXT  -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="max-w-4xl mx-auto mb-20">
+    <div class="mb-4">
+      <span class="screen-label">SCREEN 2D</span>
+      <h2 style="color: #e0e0e0; font-size: 20px; font-weight: 600; margin-top: 4px;">Active Workout — Exercise Complete (Add Set or Next)</h2>
+      <p class="screen-description mt-2">
+        After logging the last prescribed set of an exercise. Offers "Add Extra Set" or
+        "Next Exercise." No timer auto-starts here (no rest needed before the next exercise).
+      </p>
+    </div>
+
+    <div class="phone-frame">
+      <div class="p-5 pt-10">
+        <div class="flex items-center justify-between mb-1">
+          <div style="color: #555580; font-size: 12px;">Exercise 1 of 3</div>
+          <div></div>
+        </div>
+        <div class="flex items-center gap-3 mb-1">
+          <h2 style="color: #fff; font-size: 22px; font-weight: 700;">Inverse Rows</h2>
+        </div>
+        <div class="flex items-center gap-2 mb-5">
+          <span class="badge-lats px-2 py-1 rounded text-xs font-medium">lats</span>
+          <span style="color: #4ade80; font-size: 13px; font-weight: 500;">✓ Complete</span>
+        </div>
+
+        <!-- All completed sets -->
+        <div class="set-row completed flex items-center justify-between mb-2">
+          <span style="font-size: 12px; color: #555580;">Set 1</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #555580;">95 lbs × 9 reps @ RPE 7</span>
+          <span style="color: #4ade80; font-size: 12px;">✓</span>
+        </div>
+        <div class="set-row completed flex items-center justify-between mb-2">
+          <span style="font-size: 12px; color: #555580;">Set 2</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #555580;">95 lbs × 8 reps @ RPE 7</span>
+          <span style="color: #4ade80; font-size: 12px;">✓</span>
+        </div>
+        <div class="set-row completed flex items-center justify-between mb-2">
+          <span style="font-size: 12px; color: #555580;">Set 3</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #555580;">95 lbs × 7 reps @ RPE 8</span>
+          <span style="color: #4ade80; font-size: 12px;">✓</span>
+        </div>
+        <div class="set-row completed flex items-center justify-between mb-2">
+          <span style="font-size: 12px; color: #555580;">Set 4</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #555580;">95 lbs × 6 reps @ RPE 9</span>
+          <span style="color: #4ade80; font-size: 12px;">✓</span>
+        </div>
+
+        <div style="height: 32px;"></div>
+
+        <!-- Action buttons -->
+        <button class="btn-primary mb-3">Next Exercise →</button>
+        <button class="btn-secondary w-full">+ Add Extra Set</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 2E: SUPERSET AUTO-ADVANCE            -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="max-w-4xl mx-auto mb-20">
+    <div class="mb-4">
+      <span class="screen-label">SCREEN 2E</span>
+      <h2 style="color: #e0e0e0; font-size: 20px; font-weight: 600; margin-top: 4px;">Active Workout — Superset Transition (Friday: Bench → Push Ups)</h2>
+      <p class="screen-description mt-2">
+        When an exercise has superset_with_next = true, completing it immediately shows
+        the superset partner. No "Next Exercise" prompt, no rest timer. A visual indicator
+        shows this is a superset continuation.
+      </p>
+    </div>
+
+    <div class="phone-frame">
+      <div class="p-5 pt-10">
+        <div class="flex items-center justify-between mb-1">
+          <div style="color: #555580; font-size: 12px;">Exercise 1 → 2 of 4 (superset)</div>
+          <button class="btn-skip">Skip</button>
+        </div>
+
+        <!-- Superset indicator -->
+        <div style="background: #2e1065; border: 1px solid #7c3aed; border-radius: 8px; padding: 8px 12px; margin-bottom: 12px;">
+          <span style="color: #a78bfa; font-size: 12px; font-weight: 600;">⚡ SUPERSET — No rest, go immediately</span>
+        </div>
+
+        <div class="flex items-center gap-3 mb-1">
+          <h2 style="color: #fff; font-size: 22px; font-weight: 700;">Push Ups AMRAP</h2>
+        </div>
+        <div class="flex items-center gap-2 mb-5">
+          <span class="badge-pecs px-2 py-1 rounded text-xs font-medium">pecs</span>
+          <span style="color: #8888aa; font-size: 12px;">after Bench Press</span>
+        </div>
+
+        <!-- Last session card for push ups -->
+        <div class="last-session p-4 mb-5">
+          <div class="flex items-center justify-between mb-3">
+            <div style="color: #6366f1; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;">Last Session — Jan 24</div>
+          </div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px;">
+            <div style="color: #555580; font-size: 10px; margin-bottom: 4px;">SET 1</div>
+            <div style="color: #8888aa;">BW × 22 reps @ RPE 10</div>
+          </div>
+        </div>
+
+        <!-- Single set input -->
+        <div class="set-row current p-4 mb-4">
+          <div style="color: #6366f1; font-size: 11px; font-weight: 600; margin-bottom: 12px;">SET 1 of 1 — NOW</div>
+          <div class="grid grid-cols-2 gap-3 mb-4">
+            <div>
+              <label style="color: #8888aa; font-size: 11px; display: block; margin-bottom: 4px;">Weight (lbs)</label>
+              <input type="number" class="input-field" value="BW" style="font-size: 16px;" />
+            </div>
+            <div>
+              <label style="color: #8888aa; font-size: 11px; display: block; margin-bottom: 4px;">Reps</label>
+              <input type="number" class="input-field" placeholder="AMRAP" />
+            </div>
+          </div>
+          <div>
+            <label style="color: #8888aa; font-size: 11px; display: block; margin-bottom: 8px;">RPE</label>
+            <div class="flex gap-2 justify-between">
+              <div class="rpe-btn">7</div>
+              <div class="rpe-btn">7.5</div>
+              <div class="rpe-btn">8</div>
+              <div class="rpe-btn">8.5</div>
+              <div class="rpe-btn">9</div>
+              <div class="rpe-btn">9.5</div>
+              <div class="rpe-btn selected">10</div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-primary">Log Set</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 2F: SKIP EXERCISE MODAL              -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="max-w-4xl mx-auto mb-20">
+    <div class="mb-4">
+      <span class="screen-label">SCREEN 2F</span>
+      <h2 style="color: #e0e0e0; font-size: 20px; font-weight: 600; margin-top: 4px;">Active Workout — Skip Exercise Modal</h2>
+      <p class="screen-description mt-2">
+        When the user taps "Skip," a modal appears with an optional reason field.
+        The exercise is marked as skipped and the wizard advances to the next exercise.
+      </p>
+    </div>
+
+    <div class="phone-frame">
+      <div class="p-5 pt-10" style="filter: brightness(0.4);">
+        <!-- Dimmed background content -->
+        <div class="flex items-center gap-3 mb-1">
+          <h2 style="color: #fff; font-size: 22px; font-weight: 700;">Inverse Rows</h2>
+        </div>
+      </div>
+
+      <!-- Modal overlay -->
+      <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; padding: 24px;">
+        <div style="background: #1e1e36; border: 1px solid #3a3a5c; border-radius: 16px; padding: 24px; width: 100%;">
+          <h3 style="color: #e0e0e0; font-size: 18px; font-weight: 600; margin-bottom: 4px;">Skip Inverse Rows?</h3>
+          <p style="color: #555580; font-size: 13px; margin-bottom: 16px;">This exercise will be marked as skipped for today.</p>
+
+          <label style="color: #8888aa; font-size: 12px; display: block; margin-bottom: 6px;">Reason (optional)</label>
+          <input type="text" class="input-field mb-4" placeholder="e.g., shoulder pain" style="text-align: left; font-size: 14px; font-family: 'IBM Plex Sans', sans-serif;" />
+
+          <button class="btn-primary mb-2" style="background: #dc2626;">Skip Exercise</button>
+          <button class="btn-ghost w-full">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 3: WORKOUT COMPLETION                -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="max-w-4xl mx-auto mb-20">
+    <div class="mb-4">
+      <span class="screen-label">SCREEN 3</span>
+      <h2 style="color: #e0e0e0; font-size: 20px; font-weight: 600; margin-top: 4px;">Workout Completion</h2>
+      <p class="screen-description mt-2">
+        Shown after the last exercise. Displays progress vs. last session, a compact grid
+        summary of all exercises, and total duration.
+      </p>
+    </div>
+
+    <div class="phone-frame">
+      <div class="p-5 pt-10">
+        <!-- Completion header -->
+        <div class="text-center mb-6">
+          <div style="font-size: 36px; margin-bottom: 8px;">💪</div>
+          <h2 style="color: #fff; font-size: 24px; font-weight: 700;">Workout Complete</h2>
+          <div style="color: #555580; font-size: 13px; margin-top: 4px;">Sunday, Jan 25 · 42 minutes</div>
+        </div>
+
+        <!-- Progress indicator -->
+        <div style="background: #0d2818; border: 1px solid #166534; border-radius: 12px; padding: 16px; text-align: center; margin-bottom: 20px;">
+          <div style="color: #4ade80; font-size: 28px; font-weight: 700;">2 of 3</div>
+          <div style="color: #4ade80; font-size: 13px; margin-top: 2px;">exercises progressed vs. last session</div>
+        </div>
+
+        <!-- Summary grid -->
+        <div style="color: #8888aa; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px;">Summary</div>
+
+        <!-- Exercise 1 -->
+        <div style="background: #1a1a30; border-radius: 8px; padding: 12px; margin-bottom: 8px;">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-2">
+              <span class="badge-lats px-2 py-0.5 rounded text-xs font-medium">lats</span>
+              <span style="color: #e0e0e0; font-size: 14px; font-weight: 500;">Inverse Rows</span>
+            </div>
+            <span class="progress-up" style="font-size: 12px;">↑ progressed</span>
+          </div>
+          <div class="grid grid-cols-4 gap-2" style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #8888aa;">
+            <div>95×9 R7</div>
+            <div>95×8 R7</div>
+            <div>95×8 R8</div>
+            <div>95×7 R9</div>
+          </div>
+        </div>
+
+        <!-- Exercise 2 -->
+        <div style="background: #1a1a30; border-radius: 8px; padding: 12px; margin-bottom: 8px;">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-2">
+              <span class="badge-biceps px-2 py-0.5 rounded text-xs font-medium">biceps</span>
+              <span style="color: #e0e0e0; font-size: 14px; font-weight: 500;">DB Concentration Curls</span>
+            </div>
+            <span class="progress-same" style="font-size: 12px;">— same</span>
+          </div>
+          <div class="grid grid-cols-4 gap-2" style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #8888aa;">
+            <div>25×10 R6</div>
+            <div>25×10 R7</div>
+            <div>25×8 R8</div>
+            <div>25×8 R9</div>
+          </div>
+        </div>
+
+        <!-- Exercise 3 -->
+        <div style="background: #1a1a30; border-radius: 8px; padding: 12px; margin-bottom: 8px;">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-2">
+              <span class="badge-legs px-2 py-0.5 rounded text-xs font-medium">legs</span>
+              <span style="color: #e0e0e0; font-size: 14px; font-weight: 500;">Stairs</span>
+            </div>
+            <span class="progress-up" style="font-size: 12px;">↑ progressed</span>
+          </div>
+          <div class="grid grid-cols-4 gap-2" style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #8888aa;">
+            <div>BW×15 R6</div>
+            <div>BW×15 R7</div>
+            <div>BW×14 R8</div>
+            <div>BW×12 R9</div>
+          </div>
+        </div>
+
+        <div style="height: 16px;"></div>
+        <button class="btn-primary">Done</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 4: WORKOUT HISTORY — WEEKLY GRID     -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="max-w-4xl mx-auto mb-20">
+    <div class="mb-4">
+      <span class="screen-label">SCREEN 4</span>
+      <h2 style="color: #e0e0e0; font-size: 20px; font-weight: 600; margin-top: 4px;">Workout History — Weekly Grid View</h2>
+      <p class="screen-description mt-2">
+        A read-only compact grid mimicking the paper sheet. Shows all exercises and set data
+        for each day of the week. Navigate between weeks. Tap an exercise to see its full history.
+        On mobile, this will likely need horizontal scrolling — each day is a column.
+      </p>
+    </div>
+
+    <div class="phone-frame" style="min-height: 900px;">
+      <div class="p-4 pt-10">
+        <!-- Week navigation -->
+        <div class="flex items-center justify-between mb-4">
+          <button style="color: #6366f1; font-size: 24px;">←</button>
+          <div class="text-center">
+            <div style="color: #e0e0e0; font-size: 16px; font-weight: 600;">Week of Jan 25, 2026</div>
+          </div>
+          <button style="color: #6366f1; font-size: 24px;">→</button>
+        </div>
+
+        <!-- Horizontal scroll hint -->
+        <div style="color: #555580; font-size: 11px; text-align: center; margin-bottom: 12px;">← swipe to see all days →</div>
+
+        <!-- Grid (showing 2 days to fit phone width — real app scrolls horizontally) -->
+        <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+          <table class="grid-table" style="min-width: 700px; width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr>
+                <th style="text-align: left; padding: 8px; width: 80px; border-bottom: 1px solid #2a2a4a;"></th>
+                <th style="padding: 8px; border-bottom: 1px solid #2a2a4a; min-width: 100px;">
+                  <div>SUN</div>
+                  <div style="font-weight: 400; color: #555580; font-size: 10px;">Jan 25</div>
+                </th>
+                <th style="padding: 8px; border-bottom: 1px solid #2a2a4a; min-width: 100px;">
+                  <div>MON</div>
+                  <div style="font-weight: 400; color: #555580; font-size: 10px;">Jan 26</div>
+                </th>
+                <th style="padding: 8px; border-bottom: 1px solid #2a2a4a; min-width: 100px;">
+                  <div>TUE</div>
+                  <div style="font-weight: 400; color: #555580; font-size: 10px;">Jan 27</div>
+                </th>
+                <th style="padding: 8px; border-bottom: 1px solid #2a2a4a; min-width: 100px;">
+                  <div>WED</div>
+                  <div style="font-weight: 400; color: #555580; font-size: 10px;">Jan 28</div>
+                </th>
+                <th style="padding: 8px; border-bottom: 1px solid #2a2a4a; min-width: 100px;">
+                  <div>THU</div>
+                  <div style="font-weight: 400; color: #555580; font-size: 10px;">Jan 29</div>
+                </th>
+                <th style="padding: 8px; border-bottom: 1px solid #2a2a4a; min-width: 100px;">
+                  <div>FRI</div>
+                  <div style="font-weight: 400; color: #555580; font-size: 10px;">Jan 30</div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Row 1: Lats -->
+              <tr>
+                <td style="padding: 8px; border-bottom: 1px solid #1a1a30; vertical-align: top;">
+                  <span class="badge-lats px-1.5 py-0.5 rounded text-xs">lats</span>
+                </td>
+                <td style="padding: 8px; border-bottom: 1px solid #1a1a30; vertical-align: top;">
+                  <div style="font-weight: 600; color: #c0c0d8; margin-bottom: 2px;">Inverse Rows</div>
+                  <div>95×9 R7</div>
+                  <div>95×8 R7</div>
+                  <div>95×8 R8</div>
+                  <div>95×7 R9</div>
+                </td>
+                <td style="padding: 8px; border-bottom: 1px solid #1a1a30; vertical-align: top; color: #555580;">—</td>
+                <td style="padding: 8px; border-bottom: 1px solid #1a1a30; vertical-align: top;">
+                  <div style="font-weight: 600; color: #c0c0d8; margin-bottom: 2px;">Pull Ups</div>
+                  <div>BW×10 R6</div>
+                  <div>BW×9 R7</div>
+                  <div>BW×8 R8</div>
+                  <div>BW×7 R9</div>
+                </td>
+                <td style="padding: 8px; border-bottom: 1px solid #1a1a30; vertical-align: top; color: #555580;">—</td>
+                <td style="padding: 8px; border-bottom: 1px solid #1a1a30; vertical-align: top;">
+                  <div style="font-weight: 600; color: #c0c0d8; margin-bottom: 2px;">Renegade Rows</div>
+                  <div>30×10 R6</div>
+                  <div>30×10 R7</div>
+                  <div>30×9 R8</div>
+                  <div>30×8 R9</div>
+                </td>
+                <td style="padding: 8px; border-bottom: 1px solid #1a1a30; vertical-align: top; color: #555580;">—</td>
+              </tr>
+              <!-- Row 2: Pecs -->
+              <tr>
+                <td style="padding: 8px; border-bottom: 1px solid #1a1a30; vertical-align: top;">
+                  <span class="badge-pecs px-1.5 py-0.5 rounded text-xs">pecs</span>
+                </td>
+                <td style="padding: 8px; border-bottom: 1px solid #1a1a30; vertical-align: top; color: #555580;">—</td>
+                <td style="padding: 8px; border-bottom: 1px solid #1a1a30; vertical-align: top;">
+                  <div style="font-weight: 600; color: #c0c0d8; margin-bottom: 2px;">Bench Press</div>
+                  <div>135×8 R6</div>
+                  <div>135×7 R7</div>
+                  <div>135×6 R8</div>
+                  <div>135×6 R9</div>
+                </td>
+                <td style="padding: 8px; border-bottom: 1px solid #1a1a30; vertical-align: top; color: #555580;">—</td>
+                <td style="padding: 8px; border-bottom: 1px solid #1a1a30; vertical-align: top;">
+                  <div style="font-weight: 600; color: #c0c0d8; margin-bottom: 2px;">Decline Bench</div>
+                  <div>135×9 R6</div>
+                  <div>135×8 R7</div>
+                  <div>135×7 R8</div>
+                  <div>135×7 R9</div>
+                </td>
+                <td style="padding: 8px; border-bottom: 1px solid #1a1a30; vertical-align: top; color: #555580;">—</td>
+                <td style="padding: 8px; border-bottom: 1px solid #1a1a30; vertical-align: top;">
+                  <div style="font-weight: 600; color: #c0c0d8; margin-bottom: 2px;">Bench Press</div>
+                  <div>135×8 R7</div>
+                  <div>135×7 R7</div>
+                  <div>135×7 R8</div>
+                  <div>135×6 R9</div>
+                  <div style="color: #555580; margin-top: 2px;">→ PU AMRAP: 24</div>
+                </td>
+              </tr>
+              <!-- Row 3: Biceps -->
+              <tr>
+                <td style="padding: 8px; border-bottom: 1px solid #1a1a30; vertical-align: top;">
+                  <span class="badge-biceps px-1.5 py-0.5 rounded text-xs">biceps</span>
+                </td>
+                <td style="padding: 8px; border-bottom: 1px solid #1a1a30; vertical-align: top;">
+                  <div style="font-weight: 600; color: #c0c0d8; margin-bottom: 2px;">DB Conc. Curls</div>
+                  <div>25×10 R6</div>
+                  <div>25×10 R7</div>
+                  <div>25×8 R8</div>
+                  <div>25×8 R9</div>
+                </td>
+                <td style="padding: 8px; border-bottom: 1px solid #1a1a30; vertical-align: top; color: #555580;">—</td>
+                <td style="padding: 8px; border-bottom: 1px solid #1a1a30; vertical-align: top;">
+                  <div style="font-weight: 600; color: #c0c0d8; margin-bottom: 2px;">DB Curls</div>
+                  <div>30×10 R6</div>
+                  <div>30×9 R7</div>
+                  <div>30×8 R8</div>
+                  <div>30×7 R9</div>
+                </td>
+                <td style="padding: 8px; border-bottom: 1px solid #1a1a30; vertical-align: top; color: #555580;">—</td>
+                <td style="padding: 8px; border-bottom: 1px solid #1a1a30; vertical-align: top;">
+                  <div style="font-weight: 600; color: #c0c0d8; margin-bottom: 2px;">DB Curls</div>
+                  <div>30×10 R7</div>
+                  <div>30×10 R7</div>
+                  <div>30×9 R8</div>
+                  <div>30×8 R9</div>
+                </td>
+                <td style="padding: 8px; border-bottom: 1px solid #1a1a30; vertical-align: top; color: #555580;">—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Bottom Nav -->
+      <div class="bottom-nav absolute bottom-0 left-0 right-0 flex justify-around py-4 px-6">
+        <div class="nav-item text-center">
+          <div style="font-size: 20px;">⏱</div>
+          <div>Workout</div>
+        </div>
+        <div class="nav-item active text-center">
+          <div style="font-size: 20px;">📋</div>
+          <div>History</div>
+        </div>
+        <div class="nav-item text-center">
+          <div style="font-size: 20px;">⚙</div>
+          <div>Program</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 5: EXERCISE HISTORY                  -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="max-w-4xl mx-auto mb-20">
+    <div class="mb-4">
+      <span class="screen-label">SCREEN 5</span>
+      <h2 style="color: #e0e0e0; font-size: 20px; font-weight: 600; margin-top: 4px;">Exercise History</h2>
+      <p class="screen-description mt-2">
+        Full history for a single exercise, accessed from the "History →" link on the
+        exercise view or by tapping an exercise in the weekly grid. Shows sessions in
+        reverse chronological order with set details and rest time annotations.
+        In v2, this screen will include progression charts.
+      </p>
+    </div>
+
+    <div class="phone-frame">
+      <div class="p-5 pt-10">
+        <!-- Back nav -->
+        <div class="flex items-center gap-3 mb-4">
+          <span style="color: #6366f1; font-size: 18px;">←</span>
+          <span style="color: #6366f1; font-size: 14px;">Back</span>
+        </div>
+
+        <h2 style="color: #fff; font-size: 22px; font-weight: 700; margin-bottom: 4px;">Inverse Rows</h2>
+        <div class="flex items-center gap-2 mb-6">
+          <span class="badge-lats px-2 py-1 rounded text-xs font-medium">lats</span>
+          <span style="color: #555580; font-size: 12px;">Rest: 2:00 · 4 sets</span>
+        </div>
+
+        <!-- v2 chart placeholder -->
+        <div style="background: #1a1a30; border: 1px dashed #2a2a4a; border-radius: 12px; padding: 24px; text-align: center; margin-bottom: 16px;">
+          <div style="color: #555580; font-size: 12px;">📈 Progression chart (v2)</div>
+        </div>
+
+        <!-- Session 1 (most recent) -->
+        <div style="background: #1a1a30; border-radius: 12px; padding: 16px; margin-bottom: 12px;">
+          <div class="flex items-center justify-between mb-3">
+            <span style="color: #e0e0e0; font-size: 14px; font-weight: 600;">Sun, Jan 25</span>
+            <span class="progress-up" style="font-size: 12px;">↑ progressed</span>
+          </div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8888aa;">
+            <div class="flex justify-between mb-1">
+              <span>Set 1: 95 lbs × 9 reps @ RPE 7</span>
+              <span style="color: #555580;">—</span>
+            </div>
+            <div class="flex justify-between mb-1">
+              <span>Set 2: 95 lbs × 8 reps @ RPE 7</span>
+              <span style="color: #555580;">2:04</span>
+            </div>
+            <div class="flex justify-between mb-1">
+              <span>Set 3: 95 lbs × 8 reps @ RPE 8</span>
+              <span style="color: #555580;">2:00</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Set 4: 95 lbs × 7 reps @ RPE 9</span>
+              <span style="color: #555580;">2:12</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Session 2 -->
+        <div style="background: #1a1a30; border-radius: 12px; padding: 16px; margin-bottom: 12px;">
+          <div class="flex items-center justify-between mb-3">
+            <span style="color: #e0e0e0; font-size: 14px; font-weight: 600;">Sun, Jan 18</span>
+            <span class="progress-up" style="font-size: 12px;">↑ progressed</span>
+          </div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8888aa;">
+            <div class="flex justify-between mb-1">
+              <span>Set 1: 95 lbs × 8 reps @ RPE 6</span>
+              <span style="color: #555580;">—</span>
+            </div>
+            <div class="flex justify-between mb-1">
+              <span>Set 2: 95 lbs × 8 reps @ RPE 7</span>
+              <span style="color: #555580;">2:00</span>
+            </div>
+            <div class="flex justify-between mb-1">
+              <span>Set 3: 95 lbs × 7 reps @ RPE 8</span>
+              <span style="color: #555580;">2:00</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Set 4: 95 lbs × 6 reps @ RPE 9</span>
+              <span style="color: #555580;">2:01</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Session 3 with extended rest -->
+        <div style="background: #1a1a30; border-radius: 12px; padding: 16px; margin-bottom: 12px;">
+          <div class="flex items-center justify-between mb-3">
+            <span style="color: #e0e0e0; font-size: 14px; font-weight: 600;">Sun, Jan 11</span>
+            <span class="progress-same" style="font-size: 12px;">— same</span>
+          </div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8888aa;">
+            <div class="flex justify-between mb-1">
+              <span>Set 1: 95 lbs × 8 reps @ RPE 7</span>
+              <span style="color: #555580;">—</span>
+            </div>
+            <div class="flex justify-between mb-1">
+              <span>Set 2: 95 lbs × 8 reps @ RPE 7</span>
+              <span style="color: #555580;">2:00</span>
+            </div>
+            <div class="flex justify-between mb-1">
+              <span>Set 3: 95 lbs × 8 reps @ RPE 7</span>
+              <span style="color: #fbbf24;">5:22 ⚠</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Set 4: 95 lbs × 7 reps @ RPE 8</span>
+              <span style="color: #555580;">2:00</span>
+            </div>
+          </div>
+          <div style="color: #92400e; font-size: 11px; margin-top: 6px;">⚠ Set 3 had extended rest (5:22 vs 2:00 prescribed)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 6: PROGRAM ADMIN                     -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="max-w-4xl mx-auto mb-20">
+    <div class="mb-4">
+      <span class="screen-label">SCREEN 6</span>
+      <h2 style="color: #e0e0e0; font-size: 20px; font-weight: 600; margin-top: 4px;">Program Admin</h2>
+      <p class="screen-description mt-2">
+        For editing the weekly workout program. Each day is expandable/collapsible.
+        Within each day, exercises can be reordered, added, removed, and configured
+        (target sets, rest override, superset linking). Also provides access to the
+        exercise library.
+      </p>
+    </div>
+
+    <div class="phone-frame" style="min-height: 950px;">
+      <div class="p-5 pt-10">
+        <h2 style="color: #fff; font-size: 22px; font-weight: 700; margin-bottom: 2px;">Program</h2>
+        <div style="color: #555580; font-size: 13px; margin-bottom: 16px;">Default Program</div>
+
+        <!-- Exercise Library link -->
+        <button class="btn-secondary w-full mb-6">📚 Exercise Library</button>
+
+        <!-- Sunday (expanded) -->
+        <div style="background: #1a1a30; border: 1px solid #2a2a4a; border-radius: 12px; margin-bottom: 8px;">
+          <div class="flex items-center justify-between p-4" style="cursor: pointer;">
+            <div class="flex items-center gap-2">
+              <span style="color: #e0e0e0; font-size: 16px; font-weight: 600;">SUN</span>
+              <span style="color: #555580; font-size: 12px;">3 exercises</span>
+            </div>
+            <span style="color: #6366f1;">▼</span>
+          </div>
+
+          <!-- Expanded content -->
+          <div style="border-top: 1px solid #2a2a4a; padding: 12px;">
+            <!-- Exercise 1 -->
+            <div class="flex items-center justify-between mb-3 p-2" style="background: #12122a; border-radius: 8px;">
+              <div class="flex items-center gap-2">
+                <span style="color: #555580; font-size: 14px; cursor: grab;">⠿</span>
+                <div>
+                  <div style="color: #e0e0e0; font-size: 13px; font-weight: 500;">Inverse Rows</div>
+                  <div style="color: #555580; font-size: 11px;">4 sets · 2:00 rest</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <button style="color: #6366f1; font-size: 12px;">Edit</button>
+                <button style="color: #f87171; font-size: 12px;">✕</button>
+              </div>
+            </div>
+
+            <!-- Exercise 2 -->
+            <div class="flex items-center justify-between mb-3 p-2" style="background: #12122a; border-radius: 8px;">
+              <div class="flex items-center gap-2">
+                <span style="color: #555580; font-size: 14px; cursor: grab;">⠿</span>
+                <div>
+                  <div style="color: #e0e0e0; font-size: 13px; font-weight: 500;">DB Concentration Curls</div>
+                  <div style="color: #555580; font-size: 11px;">4 sets · 2:00 rest</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <button style="color: #6366f1; font-size: 12px;">Edit</button>
+                <button style="color: #f87171; font-size: 12px;">✕</button>
+              </div>
+            </div>
+
+            <!-- Exercise 3 -->
+            <div class="flex items-center justify-between mb-3 p-2" style="background: #12122a; border-radius: 8px;">
+              <div class="flex items-center gap-2">
+                <span style="color: #555580; font-size: 14px; cursor: grab;">⠿</span>
+                <div>
+                  <div style="color: #e0e0e0; font-size: 13px; font-weight: 500;">Stairs</div>
+                  <div style="color: #555580; font-size: 11px;">4 sets · 3:00 rest</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <button style="color: #6366f1; font-size: 12px;">Edit</button>
+                <button style="color: #f87171; font-size: 12px;">✕</button>
+              </div>
+            </div>
+
+            <button style="color: #6366f1; font-size: 13px; font-weight: 500; padding: 8px;">+ Add Exercise</button>
+          </div>
+        </div>
+
+        <!-- Monday (collapsed) -->
+        <div style="background: #1a1a30; border: 1px solid #2a2a4a; border-radius: 12px; margin-bottom: 8px;">
+          <div class="flex items-center justify-between p-4" style="cursor: pointer;">
+            <div class="flex items-center gap-2">
+              <span style="color: #e0e0e0; font-size: 16px; font-weight: 600;">MON</span>
+              <span style="color: #555580; font-size: 12px;">3 exercises</span>
+            </div>
+            <span style="color: #555580;">▶</span>
+          </div>
+        </div>
+
+        <!-- Tuesday (collapsed) -->
+        <div style="background: #1a1a30; border: 1px solid #2a2a4a; border-radius: 12px; margin-bottom: 8px;">
+          <div class="flex items-center justify-between p-4" style="cursor: pointer;">
+            <div class="flex items-center gap-2">
+              <span style="color: #e0e0e0; font-size: 16px; font-weight: 600;">TUE</span>
+              <span style="color: #555580; font-size: 12px;">3 exercises</span>
+            </div>
+            <span style="color: #555580;">▶</span>
+          </div>
+        </div>
+
+        <!-- Wednesday (collapsed) -->
+        <div style="background: #1a1a30; border: 1px solid #2a2a4a; border-radius: 12px; margin-bottom: 8px;">
+          <div class="flex items-center justify-between p-4" style="cursor: pointer;">
+            <div class="flex items-center gap-2">
+              <span style="color: #e0e0e0; font-size: 16px; font-weight: 600;">WED</span>
+              <span style="color: #555580; font-size: 12px;">3 exercises</span>
+            </div>
+            <span style="color: #555580;">▶</span>
+          </div>
+        </div>
+
+        <!-- Thursday (collapsed) -->
+        <div style="background: #1a1a30; border: 1px solid #2a2a4a; border-radius: 12px; margin-bottom: 8px;">
+          <div class="flex items-center justify-between p-4" style="cursor: pointer;">
+            <div class="flex items-center gap-2">
+              <span style="color: #e0e0e0; font-size: 16px; font-weight: 600;">THU</span>
+              <span style="color: #555580; font-size: 12px;">3 exercises</span>
+            </div>
+            <span style="color: #555580;">▶</span>
+          </div>
+        </div>
+
+        <!-- Friday (collapsed, showing superset) -->
+        <div style="background: #1a1a30; border: 1px solid #2a2a4a; border-radius: 12px; margin-bottom: 8px;">
+          <div class="flex items-center justify-between p-4" style="cursor: pointer;">
+            <div class="flex items-center gap-2">
+              <span style="color: #e0e0e0; font-size: 16px; font-weight: 600;">FRI</span>
+              <span style="color: #555580; font-size: 12px;">4 exercises (1 superset)</span>
+            </div>
+            <span style="color: #555580;">▶</span>
+          </div>
+        </div>
+
+        <!-- Saturday (rest day) -->
+        <div style="background: #1a1a30; border: 1px solid #2a2a4a; border-radius: 12px; margin-bottom: 8px; opacity: 0.5;">
+          <div class="flex items-center justify-between p-4">
+            <div class="flex items-center gap-2">
+              <span style="color: #e0e0e0; font-size: 16px; font-weight: 600;">SAT</span>
+              <span style="color: #555580; font-size: 12px;">Rest Day</span>
+            </div>
+            <span style="color: #555580;">💤</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Nav -->
+      <div class="bottom-nav absolute bottom-0 left-0 right-0 flex justify-around py-4 px-6">
+        <div class="nav-item text-center">
+          <div style="font-size: 20px;">⏱</div>
+          <div>Workout</div>
+        </div>
+        <div class="nav-item text-center">
+          <div style="font-size: 20px;">📋</div>
+          <div>History</div>
+        </div>
+        <div class="nav-item active text-center">
+          <div style="font-size: 20px;">⚙</div>
+          <div>Program</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- NAVIGATION MAP                              -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="max-w-4xl mx-auto mb-20">
+    <div class="mb-4">
+      <span class="screen-label">NAVIGATION MAP</span>
+      <h2 style="color: #e0e0e0; font-size: 20px; font-weight: 600; margin-top: 4px;">Screen Flow</h2>
+    </div>
+
+    <div style="background: #12122a; border: 1px solid #2a2a4a; border-radius: 16px; padding: 32px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #8888aa; line-height: 2.2;">
+      <pre style="white-space: pre-wrap;">
+HOME (1A/1B/1C)
+  ├── [Start Workout] → EXERCISE VIEW (2A)
+  │     ├── [Log Set] → TIMER COUNTDOWN (2B) → TIMER OVERAGE (2C)
+  │     ├── [Skip] → SKIP MODAL (2F) → next exercise
+  │     ├── [Last set done] → EXERCISE COMPLETE (2D)
+  │     │     ├── [Next Exercise] → next EXERCISE VIEW (2A)
+  │     │     └── [Add Extra Set] → same EXERCISE VIEW (2A)
+  │     ├── [Superset] → SUPERSET VIEW (2E) → next exercise
+  │     └── [Last exercise done] → COMPLETION (3)
+  │           └── [Done] → HOME
+  ├── [History tab] → WEEKLY GRID (4)
+  │     └── [Tap exercise] → EXERCISE HISTORY (5)
+  └── [Program tab] → PROGRAM ADMIN (6)
+      </pre>
+    </div>
+  </div>
+
+</body>
+</html>
