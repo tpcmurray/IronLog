@@ -378,4 +378,122 @@ async function completeWorkout(req, res, next) {
   }
 }
 
-module.exports = { startWorkout, getCurrentWorkout, completeWorkout };
+async function startExercise(req, res, next) {
+  try {
+    const { workoutId, sessionExerciseId } = req.params;
+
+    // Verify session exercise belongs to this workout and is pending
+    const { rows } = await pool.query(
+      `SELECT id, status FROM session_exercises
+       WHERE id = $1 AND workout_session_id = $2`,
+      [sessionExerciseId, workoutId]
+    );
+    if (rows.length === 0) {
+      throw createError(404, 'Session exercise not found', 'NOT_FOUND');
+    }
+    if (rows[0].status !== 'pending') {
+      throw createError(409, `Exercise is already ${rows[0].status}`, 'CONFLICT');
+    }
+
+    await pool.query(
+      `UPDATE session_exercises SET started_at = NOW(), status = 'in_progress'
+       WHERE id = $1`,
+      [sessionExerciseId]
+    );
+
+    const { rows: updated } = await pool.query(
+      `SELECT id, status, started_at FROM session_exercises WHERE id = $1`,
+      [sessionExerciseId]
+    );
+
+    res.json({ data: updated[0] });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function skipExercise(req, res, next) {
+  try {
+    const { workoutId, sessionExerciseId } = req.params;
+    const { reason } = req.body || {};
+
+    // Verify session exercise belongs to this workout
+    const { rows } = await pool.query(
+      `SELECT id, status FROM session_exercises
+       WHERE id = $1 AND workout_session_id = $2`,
+      [sessionExerciseId, workoutId]
+    );
+    if (rows.length === 0) {
+      throw createError(404, 'Session exercise not found', 'NOT_FOUND');
+    }
+    if (rows[0].status === 'completed' || rows[0].status === 'partial') {
+      throw createError(409, 'Cannot skip a completed exercise', 'CONFLICT');
+    }
+
+    await pool.query(
+      `UPDATE session_exercises
+       SET status = 'skipped', skip_reason = $1, completed_at = NOW()
+       WHERE id = $2`,
+      [reason || null, sessionExerciseId]
+    );
+
+    const { rows: updated } = await pool.query(
+      `SELECT id, status, skip_reason, completed_at FROM session_exercises WHERE id = $1`,
+      [sessionExerciseId]
+    );
+
+    res.json({ data: updated[0] });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function completeExercise(req, res, next) {
+  try {
+    const { workoutId, sessionExerciseId } = req.params;
+
+    // Verify session exercise belongs to this workout
+    const { rows } = await pool.query(
+      `SELECT se.id, se.status, pe.target_sets
+       FROM session_exercises se
+       JOIN program_exercises pe ON pe.id = se.program_exercise_id
+       WHERE se.id = $1 AND se.workout_session_id = $2`,
+      [sessionExerciseId, workoutId]
+    );
+    if (rows.length === 0) {
+      throw createError(404, 'Session exercise not found', 'NOT_FOUND');
+    }
+    if (rows[0].status === 'completed' || rows[0].status === 'partial' || rows[0].status === 'skipped') {
+      throw createError(409, `Exercise is already ${rows[0].status}`, 'CONFLICT');
+    }
+
+    // Count logged sets to determine completed vs partial
+    const { rows: setCount } = await pool.query(
+      'SELECT COUNT(*)::int AS count FROM set_logs WHERE session_exercise_id = $1',
+      [sessionExerciseId]
+    );
+    const loggedSets = setCount[0].count;
+    const targetSets = rows[0].target_sets;
+    const status = loggedSets >= targetSets ? 'completed' : 'partial';
+
+    await pool.query(
+      `UPDATE session_exercises SET status = $1, completed_at = NOW()
+       WHERE id = $2`,
+      [status, sessionExerciseId]
+    );
+
+    const { rows: updated } = await pool.query(
+      `SELECT id, status, completed_at FROM session_exercises WHERE id = $1`,
+      [sessionExerciseId]
+    );
+
+    res.json({ data: updated[0] });
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = {
+  startWorkout, getCurrentWorkout, completeWorkout,
+  startExercise, skipExercise, completeExercise,
+};
