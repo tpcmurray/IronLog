@@ -19,7 +19,7 @@ app.get('/api/health', (_req, res) => {
 app.use('/api/exercises', require('./routes/exercises'));
 app.use('/api/program', require('./routes/programs'));
 app.use('/api/workouts', require('./routes/workouts'));
-// app.use('/api/sets', require('./routes/sets'));
+app.use('/api/sets', require('./routes/sets'));
 
 // Error handler (must be last)
 app.use(errorHandler);

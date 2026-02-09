@@ -176,6 +176,40 @@ function compareProgression(currentSets, previousSets) {
   return { status: 'regressed' };
 }
 
+/**
+ * Get Sunday–Saturday week boundaries for a given date.
+ */
+function getWeekBounds(date) {
+  const d = new Date(date);
+  const day = d.getUTCDay(); // 0 = Sunday
+  const start = new Date(d);
+  start.setUTCDate(d.getUTCDate() - day);
+  start.setUTCHours(0, 0, 0, 0);
+  const end = new Date(start);
+  end.setUTCDate(start.getUTCDate() + 6);
+  end.setUTCHours(23, 59, 59, 999);
+  return { start, end };
+}
+
+/**
+ * Parse ISO week string (e.g. "2026-W04") to a date in that week.
+ */
+function isoWeekToDate(weekStr) {
+  const match = weekStr.match(/^(\d{4})-W(\d{2})$/);
+  if (!match) return null;
+  const year = parseInt(match[1], 10);
+  const week = parseInt(match[2], 10);
+  // ISO week 1 contains Jan 4. Find Monday of ISO week 1.
+  const jan4 = new Date(Date.UTC(year, 0, 4));
+  const dayOfWeek = jan4.getUTCDay() || 7; // Mon=1..Sun=7
+  const isoWeek1Monday = new Date(jan4);
+  isoWeek1Monday.setUTCDate(jan4.getUTCDate() - dayOfWeek + 1);
+  // Target Monday
+  const target = new Date(isoWeek1Monday);
+  target.setUTCDate(isoWeek1Monday.getUTCDate() + (week - 1) * 7);
+  return target;
+}
+
 // ── Route handlers ───────────────────────────────────────────
 
 async function startWorkout(req, res, next) {
@@ -493,7 +527,104 @@ async function completeExercise(req, res, next) {
   }
 }
 
+async function getWorkoutHistory(req, res, next) {
+  try {
+    const { week, date } = req.query;
+
+    let refDate;
+    if (week) {
+      refDate = isoWeekToDate(week);
+      if (!refDate) {
+        throw createError(400, 'Invalid week format. Use YYYY-WNN (e.g. 2026-W04)', 'VALIDATION_ERROR');
+      }
+    } else if (date) {
+      refDate = new Date(date + 'T00:00:00Z');
+      if (isNaN(refDate.getTime())) {
+        throw createError(400, 'Invalid date format. Use YYYY-MM-DD', 'VALIDATION_ERROR');
+      }
+    } else {
+      refDate = new Date();
+    }
+
+    const bounds = getWeekBounds(refDate);
+    const weekStart = bounds.start.toISOString().slice(0, 10);
+    const weekEnd = bounds.end.toISOString().slice(0, 10);
+
+    // Get completed workouts in this date range
+    const { rows: workouts } = await pool.query(
+      `SELECT ws.id, ws.started_at, ws.completed_at, pd.day_of_week
+       FROM workout_sessions ws
+       JOIN program_days pd ON pd.id = ws.program_day_id
+       WHERE ws.completed_at IS NOT NULL
+         AND ws.started_at >= $1::date
+         AND ws.started_at < ($2::date + INTERVAL '1 day')
+       ORDER BY ws.started_at`,
+      [weekStart, weekEnd]
+    );
+
+    const workoutData = [];
+    for (const w of workouts) {
+      // Get exercises with sets
+      const { rows: exercises } = await pool.query(
+        `SELECT se.id, se.status, se.skip_reason,
+                e.name AS exercise_name, e.muscle_group
+         FROM session_exercises se
+         JOIN exercises e ON e.id = se.exercise_id
+         WHERE se.workout_session_id = $1
+         ORDER BY se.sort_order`,
+        [w.id]
+      );
+
+      const seIds = exercises.map((ex) => ex.id);
+      const { rows: allSets } = seIds.length > 0
+        ? await pool.query(
+            `SELECT session_exercise_id, set_number, weight_lbs, reps, rpe
+             FROM set_logs
+             WHERE session_exercise_id = ANY($1)
+             ORDER BY session_exercise_id, set_number`,
+            [seIds]
+          )
+        : { rows: [] };
+
+      const setsByEx = {};
+      for (const s of allSets) {
+        if (!setsByEx[s.session_exercise_id]) setsByEx[s.session_exercise_id] = [];
+        setsByEx[s.session_exercise_id].push({
+          set_number: s.set_number,
+          weight_lbs: parseFloat(s.weight_lbs),
+          reps: s.reps,
+          rpe: parseFloat(s.rpe),
+        });
+      }
+
+      workoutData.push({
+        id: w.id,
+        day_of_week: w.day_of_week,
+        date: w.started_at,
+        exercises: exercises.map((ex) => ({
+          exercise_name: ex.exercise_name,
+          muscle_group: ex.muscle_group,
+          status: ex.status,
+          sets: setsByEx[ex.id] || [],
+        })),
+      });
+    }
+
+    res.json({
+      data: {
+        week_start: weekStart,
+        week_end: weekEnd,
+        workouts: workoutData,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   startWorkout, getCurrentWorkout, completeWorkout,
   startExercise, skipExercise, completeExercise,
+  getWorkoutHistory,
+  fetchLastSession, compareProgression,
 };

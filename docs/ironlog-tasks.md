@@ -76,30 +76,30 @@
 
 ## Phase 7: API — Session Exercises
 
-- [ ] **7.1** Add session exercise endpoints to workouts routes:
+- [x] **7.1** Add session exercise endpoints to workouts routes:
   - `PUT /api/workouts/:workoutId/exercises/:sessionExerciseId/start` — set `started_at`
   - `PUT /api/workouts/:workoutId/exercises/:sessionExerciseId/skip` — set status to 'skipped', accept optional `reason`
   - `PUT /api/workouts/:workoutId/exercises/:sessionExerciseId/complete` — set status to 'completed' (or 'partial' if fewer sets than target), set `completed_at`
-- [ ] **7.2** Verify: exercise state transitions work correctly
+- [x] **7.2** Verify: exercise state transitions work correctly
 
 ## Phase 8: API — Set Logging
 
-- [ ] **8.1** Create `server/src/routes/sets.js` — route definitions
-- [ ] **8.2** Create `server/src/controllers/setController.js`:
+- [x] **8.1** Create `server/src/routes/sets.js` — route definitions
+- [x] **8.2** Create `server/src/controllers/setController.js`:
   - `POST /api/workouts/:workoutId/exercises/:sessionExerciseId/sets` — log set (weight_lbs, reps, rpe, rest_duration_seconds, prescribed_rest_seconds); compute `rest_was_extended` server-side
   - `PUT /api/sets/:id` — edit a logged set (partial update)
   - `DELETE /api/sets/:id` — delete a set
-- [ ] **8.3** Add validation (rpe 7–10 in 0.5 steps, reps >= 0, weight_lbs > 0, set_number >= 1)
-- [ ] **8.4** Verify: log sets, edit, delete; check `rest_was_extended` computed correctly
+- [x] **8.3** Add validation (rpe 7–10 in 0.5 steps, reps >= 0, weight_lbs > 0, set_number >= 1)
+- [x] **8.4** Verify: log sets, edit, delete; check `rest_was_extended` computed correctly
 
 ## Phase 9: API — History
 
-- [ ] **9.1** Add history endpoints to exercises and workouts routes:
+- [x] **9.1** Add history endpoints to exercises and workouts routes:
   - `GET /api/exercises/:id/last-session` — most recent completed session with sets
   - `GET /api/exercises/:id/history` — paginated history (limit/offset), includes progression_status per session
   - `GET /api/workouts/history?week=YYYY-WW` or `?date=YYYY-MM-DD` — completed workouts for a week with exercises and sets
-- [ ] **9.2** Implement week boundary calculation (Sunday–Saturday based on the program)
-- [ ] **9.3** Verify: history queries return correct data with proper pagination
+- [x] **9.2** Implement week boundary calculation (Sunday–Saturday based on the program)
+- [x] **9.3** Verify: history queries return correct data with proper pagination
 
 ## Phase 10: Frontend — Project Setup
 
