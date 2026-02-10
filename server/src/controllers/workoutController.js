@@ -627,4 +627,5 @@ module.exports = {
   startExercise, skipExercise, completeExercise,
   getWorkoutHistory,
   fetchLastSession, compareProgression,
+  getWeekBounds, isoWeekToDate,
 };

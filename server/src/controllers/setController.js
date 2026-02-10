@@ -180,4 +180,4 @@ async function deleteSet(req, res, next) {
   }
 }
 
-module.exports = { logSet, editSet, deleteSet };
+module.exports = { logSet, editSet, deleteSet, validateSetFields };
