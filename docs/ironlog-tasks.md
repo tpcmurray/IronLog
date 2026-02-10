@@ -103,24 +103,24 @@
 
 ## Phase 10: Frontend — Project Setup
 
-- [ ] **10.1** Initialize `client/package.json` (React, React Router, Vite, Tailwind CSS, PostCSS)
-- [ ] **10.2** Create `client/vite.config.js` (API proxy to localhost:3001 for dev)
-- [ ] **10.3** Create `client/tailwind.config.js` and `client/postcss.config.js`
-- [ ] **10.4** Create `client/index.html` and `client/src/main.jsx` entry point
-- [ ] **10.5** Create `client/src/index.css` with Tailwind imports and custom theme (dark background, IBM Plex fonts, muscle group colors per wireframes)
-- [ ] **10.6** Create `client/public/manifest.json` (PWA manifest for home screen icon)
-- [ ] **10.7** Verify: `npm run dev` serves the app, Tailwind works, hot reload functional
+- [x] **10.1** Initialize `client/package.json` (React, React Router, Vite, Tailwind CSS, PostCSS)
+- [x] **10.2** Create `client/vite.config.js` (API proxy to localhost:3001 for dev)
+- [x] **10.3** Create `client/tailwind.config.js` and `client/postcss.config.js`
+- [x] **10.4** Create `client/index.html` and `client/src/main.jsx` entry point
+- [x] **10.5** Create `client/src/index.css` with Tailwind imports and custom theme (dark background, IBM Plex fonts, muscle group colors per wireframes)
+- [x] **10.6** Create `client/public/manifest.json` (PWA manifest for home screen icon)
+- [x] **10.7** Verify: `npm run dev` serves the app, Tailwind works, hot reload functional
 
 ## Phase 11: Frontend — API Client & Utilities
 
-- [ ] **11.1** Create `client/src/api/client.js` — base fetch wrapper (JSON, error handling, toast-ready error format)
-- [ ] **11.2** Create `client/src/api/programs.js` — `getActiveProgram()`, `updateProgram()`
-- [ ] **11.3** Create `client/src/api/exercises.js` — `getExercises()`, `createExercise()`, `updateExercise()`, `getLastSession()`, `getExerciseHistory()`
-- [ ] **11.4** Create `client/src/api/workouts.js` — `startWorkout()`, `getCurrentWorkout()`, `completeWorkout()`, `getWorkoutHistory()`, exercise state endpoints
-- [ ] **11.5** Create `client/src/api/sets.js` — `logSet()`, `editSet()`, `deleteSet()`
-- [ ] **11.6** Create `client/src/utils/constants.js` — RPE values array, muscle group color map, day labels
-- [ ] **11.7** Create `client/src/utils/formatters.js` — `formatWeight()`, `formatTime()`, `formatDate()`, `formatDuration()`
-- [ ] **11.8** Create `client/src/utils/progression.js` — `compareProgression()` function (client-side duplicate for UI use)
+- [x] **11.1** Create `client/src/api/client.js` — base fetch wrapper (JSON, error handling, toast-ready error format)
+- [x] **11.2** Create `client/src/api/programs.js` — `getActiveProgram()`, `updateProgram()`
+- [x] **11.3** Create `client/src/api/exercises.js` — `getExercises()`, `createExercise()`, `updateExercise()`, `getLastSession()`, `getExerciseHistory()`
+- [x] **11.4** Create `client/src/api/workouts.js` — `startWorkout()`, `getCurrentWorkout()`, `completeWorkout()`, `getWorkoutHistory()`, exercise state endpoints
+- [x] **11.5** Create `client/src/api/sets.js` — `logSet()`, `editSet()`, `deleteSet()`
+- [x] **11.6** Create `client/src/utils/constants.js` — RPE values array, muscle group color map, day labels
+- [x] **11.7** Create `client/src/utils/formatters.js` — `formatWeight()`, `formatTime()`, `formatDate()`, `formatDuration()`
+- [x] **11.8** Create `client/src/utils/progression.js` — `compareProgression()` function (client-side duplicate for UI use)
 
 ## Phase 12: Frontend — Layout & Routing
 
