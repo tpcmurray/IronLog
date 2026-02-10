@@ -20,17 +20,24 @@ export default function useWorkout(workout) {
     return logged + 1;
   }, [currentExercise]);
 
-  // Pre-fill values from last session's corresponding set
+  // Pre-fill weight from last logged set in this exercise, falling back to last session
   const prefill = useMemo(() => {
-    if (!currentExercise?.last_session?.sets) return { weight: '', reps: '' };
-    const lastSet = currentExercise.last_session.sets.find(
+    const loggedSets = currentExercise?.sets;
+    const lastLogged = loggedSets?.length > 0 ? loggedSets[loggedSets.length - 1] : null;
+
+    const lastSessionSet = currentExercise?.last_session?.sets?.find(
       (s) => s.set_number === nextSetNumber
     );
-    if (!lastSet) return { weight: '', reps: '' };
-    return {
-      weight: String(lastSet.weight_lbs),
-      reps: String(lastSet.reps),
-    };
+
+    const weight = lastLogged
+      ? String(lastLogged.weight_lbs)
+      : lastSessionSet
+        ? String(lastSessionSet.weight_lbs)
+        : '';
+
+    const reps = lastSessionSet ? String(lastSessionSet.reps) : '';
+
+    return { weight, reps };
   }, [currentExercise, nextSetNumber]);
 
   // Log a set for the current exercise
@@ -80,6 +87,7 @@ export default function useWorkout(workout) {
   const completeCurrentExercise = useCallback(async () => {
     const ex = exercises[currentIndex];
     if (!ex) return;
+    if (ex.status === 'completed' || ex.status === 'partial' || ex.status === 'skipped') return;
     await apiCompleteExercise(workout.id, ex.id);
     const newStatus = (ex.sets?.length || 0) < ex.target_sets ? 'partial' : 'completed';
     setExercises((prev) =>

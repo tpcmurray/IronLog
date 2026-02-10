@@ -157,8 +157,10 @@ function WorkoutContent({ workout }) {
           setPendingRestDuration(null);
           setIsSuperset(true);
           goNext();
+        } else {
+          // Complete the exercise so Next Exercise / Add Extra Set buttons appear
+          await completeCurrentExercise();
         }
-        // Otherwise show completion buttons (no timer auto-start)
       } else if (currentExercise.rest_seconds) {
         // Not last set — start rest timer
         timer.start(currentExercise.rest_seconds);

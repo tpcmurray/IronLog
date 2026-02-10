@@ -99,14 +99,12 @@ export default function ExerciseView({
       {/* Exercise completion actions */}
       {isComplete && (
         <div className="mt-8">
-          {!isLastExercise && (
-            <button
-              onClick={onNextExercise}
-              className="w-full rounded-xl py-4 text-lg font-semibold text-white bg-accent mb-3"
-            >
-              Next Exercise &rarr;
-            </button>
-          )}
+          <button
+            onClick={onNextExercise}
+            className="w-full rounded-xl py-4 text-lg font-semibold text-white bg-accent mb-3"
+          >
+            {isLastExercise ? <>Finish Workout &#10003;</> : <>Next Exercise &rarr;</>}
+          </button>
           <button
             onClick={onAddExtraSet}
             className="w-full rounded-xl py-3 text-sm font-medium text-accent border border-accent bg-transparent"
