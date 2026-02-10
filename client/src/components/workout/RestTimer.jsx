@@ -48,7 +48,7 @@ export default function RestTimer({ mode, remaining, elapsed, prescribed, nextSe
       {/* Dismiss */}
       <button
         onClick={onDismiss}
-        className="mt-4 bg-transparent text-text-secondary font-medium text-[13px] px-4 py-2 border-none cursor-pointer"
+        className="mt-4 bg-transparent text-text-secondary font-medium text-[13px] px-4 min-h-[44px] border-none cursor-pointer"
       >
         Dismiss Timer
       </button>

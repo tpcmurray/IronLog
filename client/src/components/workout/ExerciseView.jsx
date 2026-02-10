@@ -36,7 +36,7 @@ export default function ExerciseView({
         {!isComplete && (
           <button
             onClick={onSkip}
-            className="bg-transparent text-progress-down border border-[#5f1e1e] rounded-lg px-4 py-2 text-[13px]"
+            className="bg-transparent text-progress-down border border-[#5f1e1e] rounded-lg px-4 min-h-[44px] text-[13px]"
           >
             Skip
           </button>
@@ -118,7 +118,7 @@ export default function ExerciseView({
       {exerciseIndex > 0 && !showTimer && (
         <button
           onClick={onPrev}
-          className="w-full mt-4 bg-transparent text-text-secondary font-medium text-[13px] py-2"
+          className="w-full mt-4 bg-transparent text-text-secondary font-medium text-[13px] min-h-[44px]"
         >
           &larr; Previous Exercise
         </button>

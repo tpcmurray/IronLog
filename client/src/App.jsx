@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import BottomNav from './components/layout/BottomNav';
+import Toasts from './components/layout/Toasts';
+import ConnectionBanner from './components/layout/ConnectionBanner';
 import HomePage from './pages/HomePage';
 import WorkoutPage from './pages/WorkoutPage';
 import HistoryPage from './pages/HistoryPage';
@@ -11,6 +13,8 @@ const TAB_ROUTES = ['/', '/history', '/program'];
 export default function App() {
   return (
     <BrowserRouter>
+      <Toasts />
+      <ConnectionBanner />
       <Routes>
         <Route path="/" element={<WithNav><HomePage /></WithNav>} />
         <Route path="/history" element={<WithNav><HistoryPage /></WithNav>} />
