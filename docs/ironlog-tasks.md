@@ -187,34 +187,34 @@
 
 ## Phase 18: Frontend — Workout History
 
-- [ ] **18.1** Create `client/src/components/history/WeeklyGrid.jsx` — horizontal-scrolling table, days as columns, muscle groups as rows, set data in cells (compact monospace format)
-- [ ] **18.2** Implement week navigation — previous/next week buttons, default to current/most recent week
-- [ ] **18.3** Create `client/src/components/history/ProgressBadge.jsx` — up/same/down indicator component
-- [ ] **18.4** Make exercises tappable — navigate to `/history/exercise/:id`
-- [ ] **18.5** Verify: weekly grid displays correctly, navigation works, tapping exercises navigates to history
+- [x] **18.1** Create `client/src/components/history/WeeklyGrid.jsx` — horizontal-scrolling table, days as columns, muscle groups as rows, set data in cells (compact monospace format)
+- [x] **18.2** Implement week navigation — previous/next week buttons, default to current/most recent week
+- [x] **18.3** Create `client/src/components/history/ProgressBadge.jsx` — up/same/down indicator component
+- [x] **18.4** Make exercises tappable — navigate to `/history/exercise/:id`
+- [x] **18.5** Verify: weekly grid displays correctly, navigation works, tapping exercises navigates to history
 
 ## Phase 19: Frontend — Exercise History
 
-- [ ] **19.1** Create `client/src/components/history/ExerciseHistory.jsx` — exercise header with name, muscle group badge, default rest/sets info
-- [ ] **19.2** Implement session list — reverse chronological, each showing date, progression status, all sets (weight x reps @ RPE), rest times with extended-rest warning
-- [ ] **19.3** Add v2 chart placeholder (dashed border, "Progression chart (v2)" text)
-- [ ] **19.4** Implement pagination (load more on scroll or button)
-- [ ] **19.5** Wire back navigation and "History" link from LastSessionCard in active workout
-- [ ] **19.6** Verify: exercise history shows correct data, pagination works, accessible from both workout view and weekly grid
+- [x] **19.1** Create `client/src/components/history/ExerciseHistory.jsx` — exercise header with name, muscle group badge, default rest/sets info
+- [x] **19.2** Implement session list — reverse chronological, each showing date, progression status, all sets (weight x reps @ RPE), rest times with extended-rest warning
+- [x] **19.3** Add v2 chart placeholder (dashed border, "Progression chart (v2)" text)
+- [x] **19.4** Implement pagination (load more on scroll or button)
+- [x] **19.5** Wire back navigation and "History" link from LastSessionCard in active workout
+- [x] **19.6** Verify: exercise history shows correct data, pagination works, accessible from both workout view and weekly grid
 
 ## Phase 20: Frontend — Program Admin
 
-- [ ] **20.1** Create `client/src/components/program/ProgramAdmin.jsx` — program name, exercise library button, list of 7 day editors
-- [ ] **20.2** Create `client/src/components/program/DayEditor.jsx` — expandable/collapsible day card showing label, exercise count, rest day indicator
-- [ ] **20.3** Create `client/src/components/program/ExerciseSlot.jsx` — exercise row with drag handle, name, set count, rest time, edit/remove buttons
-- [ ] **20.4** Implement add exercise to day — picker from exercise library or create inline
-- [ ] **20.5** Implement remove exercise from day
-- [ ] **20.6** Implement reorder exercises within a day (move up/down buttons or drag)
-- [ ] **20.7** Implement exercise slot configuration — edit target sets, override rest time, toggle superset_with_next
-- [ ] **20.8** Implement toggle rest day on/off per day
-- [ ] **20.9** Implement save — `PUT /api/program/:id` with full program structure
-- [ ] **20.10** Create `client/src/components/program/ExerciseLibrary.jsx` — list all exercises, create new, edit existing (name, muscle group, default rest, notes)
-- [ ] **20.11** Verify: can modify program, add/remove/reorder exercises, save persists, changes don't affect past sessions
+- [x] **20.1** Create `client/src/components/program/ProgramAdmin.jsx` — program name, exercise library button, list of 7 day editors
+- [x] **20.2** Create `client/src/components/program/DayEditor.jsx` — expandable/collapsible day card showing label, exercise count, rest day indicator
+- [x] **20.3** Create `client/src/components/program/ExerciseSlot.jsx` — exercise row with drag handle, name, set count, rest time, edit/remove buttons
+- [x] **20.4** Implement add exercise to day — picker from exercise library or create inline
+- [x] **20.5** Implement remove exercise from day
+- [x] **20.6** Implement reorder exercises within a day (move up/down buttons or drag)
+- [x] **20.7** Implement exercise slot configuration — edit target sets, override rest time, toggle superset_with_next
+- [x] **20.8** Implement toggle rest day on/off per day
+- [x] **20.9** Implement save — `PUT /api/program/:id` with full program structure
+- [x] **20.10** Create `client/src/components/program/ExerciseLibrary.jsx` — list all exercises, create new, edit existing (name, muscle group, default rest, notes)
+- [x] **20.11** Verify: can modify program, add/remove/reorder exercises, save persists, changes don't affect past sessions
 
 ## Phase 21: Error Handling & Polish
 
