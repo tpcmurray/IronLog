@@ -76,6 +76,27 @@ Migrations run automatically when the API starts. To apply migrations, start the
 - `db/init/` — SQL init scripts mounted into Postgres container
 - `docker-compose.yml` — Compose stack for db, api, client
 
+## Backup & Restore
+
+The PostgreSQL data lives in the `pgdata` Docker volume. To create a backup:
+
+```bash
+docker-compose exec db pg_dump -U ironlog ironlog > backup_$(date +%Y%m%d).sql
+```
+
+To restore from a backup:
+
+```bash
+docker-compose exec -T db psql -U ironlog ironlog < backup_20260210.sql
+```
+
+Data persists across `docker-compose down` and `docker-compose up` because the `pgdata` volume is not removed. To fully reset the database (destroys all data):
+
+```bash
+docker-compose down -v
+docker-compose up --build
+```
+
 ## Notes
 - Single-user app for local network use; no authentication enabled.
 - Seed data and initial program are included in migrations.

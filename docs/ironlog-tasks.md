@@ -218,23 +218,23 @@
 
 ## Phase 21: Error Handling & Polish
 
-- [ ] **21.1** Implement toast notification system for API errors
-- [ ] **21.2** Implement "Connection lost" banner for network errors
-- [ ] **21.3** Handle edge cases: starting workout on rest day (shouldn't be possible from UI), double-starting a session (409 conflict)
-- [ ] **21.4** Ensure all numeric inputs have appropriate `inputmode="decimal"` or `inputmode="numeric"` for mobile keyboards
-- [ ] **21.5** Ensure touch targets are at least 44x44px on all interactive elements
-- [ ] **21.6** Test all screens at 390px width for mobile viewport
-- [ ] **21.7** Release wake lock on workout completion or page unmount
+- [x] **21.1** Implement toast notification system for API errors
+- [x] **21.2** Implement "Connection lost" banner for network errors
+- [x] **21.3** Handle edge cases: starting workout on rest day (shouldn't be possible from UI), double-starting a session (409 conflict)
+- [x] **21.4** Ensure all numeric inputs have appropriate `inputmode="decimal"` or `inputmode="numeric"` for mobile keyboards
+- [x] **21.5** Ensure touch targets are at least 44x44px on all interactive elements
+- [x] **21.6** Test all screens at 390px width for mobile viewport
+- [x] **21.7** Release wake lock on workout completion or page unmount
 
 ## Phase 22: Docker Build & Deployment Verification
 
-- [ ] **22.1** Verify `docker-compose build` succeeds for all services
-- [ ] **22.2** Verify `docker-compose up` — all three containers start, migrations run, seed data loads
-- [ ] **22.3** Verify Nginx serves React app and proxies `/api/` to Express
-- [ ] **22.4** Full end-to-end test: open app on Android Chrome → start workout → log sets through all exercises → complete → verify in history
-- [ ] **22.5** Test resume flow: start workout → close browser → reopen → resume workout
-- [ ] **22.6** Verify PostgreSQL data persists across `docker-compose down && docker-compose up`
-- [ ] **22.7** Document backup command in README
+- [x] **22.1** Verify `docker-compose build` succeeds for all services
+- [x] **22.2** Verify `docker-compose up` — all three containers start, migrations run, seed data loads
+- [x] **22.3** Verify Nginx serves React app and proxies `/api/` to Express
+- [x] **22.4** Full end-to-end test: open app on Android Chrome → start workout → log sets through all exercises → complete → verify in history
+- [x] **22.5** Test resume flow: start workout → close browser → reopen → resume workout
+- [x] **22.6** Verify PostgreSQL data persists across `docker-compose down && docker-compose up`
+- [x] **22.7** Document backup command in README
 
 ---
 
