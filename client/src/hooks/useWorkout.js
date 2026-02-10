@@ -1,6 +1,10 @@
 import { useState, useCallback, useMemo } from 'react';
 import { logSet as apiLogSet } from '../api/sets';
-import { startExercise as apiStartExercise } from '../api/workouts';
+import {
+  startExercise as apiStartExercise,
+  completeExercise as apiCompleteExercise,
+  skipExercise as apiSkipExercise,
+} from '../api/workouts';
 
 export default function useWorkout(workout) {
   const [exercises, setExercises] = useState(workout?.exercises || []);
@@ -72,6 +76,43 @@ export default function useWorkout(workout) {
     [exercises, currentIndex, workout?.id]
   );
 
+  // Complete current exercise via API and update local state
+  const completeCurrentExercise = useCallback(async () => {
+    const ex = exercises[currentIndex];
+    if (!ex) return;
+    await apiCompleteExercise(workout.id, ex.id);
+    const newStatus = (ex.sets?.length || 0) < ex.target_sets ? 'partial' : 'completed';
+    setExercises((prev) =>
+      prev.map((e, i) => (i === currentIndex ? { ...e, status: newStatus } : e))
+    );
+  }, [exercises, currentIndex, workout?.id]);
+
+  // Skip current exercise via API and advance
+  const skipCurrentExercise = useCallback(
+    async (reason) => {
+      const ex = exercises[currentIndex];
+      if (!ex) return;
+      await apiSkipExercise(workout.id, ex.id, reason);
+      setExercises((prev) =>
+        prev.map((e, i) =>
+          i === currentIndex ? { ...e, status: 'skipped', skip_reason: reason } : e
+        )
+      );
+    },
+    [exercises, currentIndex, workout?.id]
+  );
+
+  // Increment target_sets locally so the user can log an extra set
+  const addExtraSet = useCallback(() => {
+    setExercises((prev) =>
+      prev.map((e, i) =>
+        i === currentIndex
+          ? { ...e, status: 'in_progress', target_sets: e.target_sets + 1 }
+          : e
+      )
+    );
+  }, [currentIndex]);
+
   const goToExercise = useCallback(
     (index) => {
       if (index >= 0 && index < totalExercises) {
@@ -84,6 +125,16 @@ export default function useWorkout(workout) {
   const goNext = useCallback(() => goToExercise(currentIndex + 1), [currentIndex, goToExercise]);
   const goPrev = useCallback(() => goToExercise(currentIndex - 1), [currentIndex, goToExercise]);
 
+  // Check if all exercises are done (for navigating to completion)
+  const allDone = useMemo(
+    () =>
+      exercises.length > 0 &&
+      exercises.every(
+        (e) => e.status === 'completed' || e.status === 'partial' || e.status === 'skipped'
+      ),
+    [exercises]
+  );
+
   return {
     exercises,
     setExercises,
@@ -93,6 +144,10 @@ export default function useWorkout(workout) {
     nextSetNumber,
     prefill,
     logSet,
+    completeCurrentExercise,
+    skipCurrentExercise,
+    addExtraSet,
+    allDone,
     goToExercise,
     goNext,
     goPrev,

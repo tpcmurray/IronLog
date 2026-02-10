@@ -165,14 +165,14 @@
 
 ## Phase 16: Frontend — Workout Flow Control
 
-- [ ] **16.1** Implement exercise completion — after last prescribed set, show "Next Exercise" and "Add Extra Set" buttons (no timer auto-start)
-- [ ] **16.2** Implement "Add Extra Set" — increments set count, shows input for the additional set
-- [ ] **16.3** Create `client/src/components/workout/SupersetBanner.jsx` — purple banner ("SUPERSET — No rest, go immediately")
-- [ ] **16.4** Implement superset auto-advance — when exercise has `superset_with_next`, completing last set immediately shows superset partner with banner, no timer
-- [ ] **16.5** Create `client/src/components/workout/SkipModal.jsx` — modal with optional reason text input, "Skip Exercise" and "Cancel" buttons
-- [ ] **16.6** Implement skip flow — marks exercise as skipped via API, advances to next exercise
-- [ ] **16.7** Implement backward navigation — "Previous Exercise" button to review/edit already-logged exercises
-- [ ] **16.8** Verify: exercise completion flow, superset auto-advance, skip with reason, backward navigation all work correctly
+- [x] **16.1** Implement exercise completion — after last prescribed set, show "Next Exercise" and "Add Extra Set" buttons (no timer auto-start)
+- [x] **16.2** Implement "Add Extra Set" — increments set count, shows input for the additional set
+- [x] **16.3** Create `client/src/components/workout/SupersetBanner.jsx` — purple banner ("SUPERSET — No rest, go immediately")
+- [x] **16.4** Implement superset auto-advance — when exercise has `superset_with_next`, completing last set immediately shows superset partner with banner, no timer
+- [x] **16.5** Create `client/src/components/workout/SkipModal.jsx` — modal with optional reason text input, "Skip Exercise" and "Cancel" buttons
+- [x] **16.6** Implement skip flow — marks exercise as skipped via API, advances to next exercise
+- [x] **16.7** Implement backward navigation — "Previous Exercise" button to review/edit already-logged exercises
+- [x] **16.8** Verify: exercise completion flow, superset auto-advance, skip with reason, backward navigation all work correctly
 
 ## Phase 17: Frontend — Workout Completion
 

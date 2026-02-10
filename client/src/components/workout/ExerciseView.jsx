@@ -3,6 +3,7 @@ import LastSessionCard from './LastSessionCard';
 import SetList from './SetList';
 import SetInput from './SetInput';
 import RestTimer from './RestTimer';
+import SupersetBanner from './SupersetBanner';
 
 export default function ExerciseView({
   exercise,
@@ -13,6 +14,13 @@ export default function ExerciseView({
   onLogSet,
   timer,
   onDismissTimer,
+  onNextExercise,
+  onAddExtraSet,
+  onSkip,
+  onPrev,
+  isSuperset,
+  prevExerciseName,
+  isLastExercise,
 }) {
   const isComplete =
     exercise.status === 'completed' || exercise.status === 'partial';
@@ -25,7 +33,14 @@ export default function ExerciseView({
         <div className="text-text-muted text-xs">
           Exercise {exerciseIndex + 1} of {totalExercises}
         </div>
-        {/* Skip button will be added in Phase 16 */}
+        {!isComplete && (
+          <button
+            onClick={onSkip}
+            className="bg-transparent text-progress-down border border-[#5f1e1e] rounded-lg px-4 py-2 text-[13px]"
+          >
+            Skip
+          </button>
+        )}
       </div>
       <div className="flex items-center gap-3 mb-1">
         <h2 className="text-white text-[22px] font-bold">{exercise.exercise_name}</h2>
@@ -37,7 +52,12 @@ export default function ExerciseView({
         )}
       </div>
 
-      {/* Last Session (hidden during timer) */}
+      {/* Superset banner */}
+      {isSuperset && (
+        <SupersetBanner prevExerciseName={prevExerciseName} />
+      )}
+
+      {/* Last Session (hidden during timer and when complete) */}
       {!isComplete && !showTimer && (
         <LastSessionCard
           lastSession={exercise.last_session}
@@ -74,6 +94,36 @@ export default function ExerciseView({
           prefill={prefill}
           onLogSet={onLogSet}
         />
+      )}
+
+      {/* Exercise completion actions */}
+      {isComplete && (
+        <div className="mt-8">
+          {!isLastExercise && (
+            <button
+              onClick={onNextExercise}
+              className="w-full rounded-xl py-4 text-lg font-semibold text-white bg-accent mb-3"
+            >
+              Next Exercise &rarr;
+            </button>
+          )}
+          <button
+            onClick={onAddExtraSet}
+            className="w-full rounded-xl py-3 text-sm font-medium text-accent border border-accent bg-transparent"
+          >
+            + Add Extra Set
+          </button>
+        </div>
+      )}
+
+      {/* Backward navigation */}
+      {exerciseIndex > 0 && !showTimer && (
+        <button
+          onClick={onPrev}
+          className="w-full mt-4 bg-transparent text-text-secondary font-medium text-[13px] py-2"
+        >
+          &larr; Previous Exercise
+        </button>
       )}
     </div>
   );
