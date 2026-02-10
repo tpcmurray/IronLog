@@ -124,20 +124,20 @@
 
 ## Phase 12: Frontend — Layout & Routing
 
-- [ ] **12.1** Create `client/src/App.jsx` with React Router setup (routes: `/`, `/workout/:id`, `/history`, `/history/exercise/:id`, `/program`)
-- [ ] **12.2** Create `client/src/components/layout/BottomNav.jsx` — 3-tab nav (Workout, History, Program) with active state
-- [ ] **12.3** Create `client/src/components/layout/PageHeader.jsx` — reusable header with optional back button
-- [ ] **12.4** Create page shells: `HomePage.jsx`, `WorkoutPage.jsx`, `HistoryPage.jsx`, `ExerciseHistoryPage.jsx`, `ProgramPage.jsx`
-- [ ] **12.5** Verify: navigation between all pages works, bottom nav highlights correctly
+- [x] **12.1** Create `client/src/App.jsx` with React Router setup (routes: `/`, `/workout/:id`, `/history`, `/history/exercise/:id`, `/program`)
+- [x] **12.2** Create `client/src/components/layout/BottomNav.jsx` — 3-tab nav (Workout, History, Program) with active state
+- [x] **12.3** Create `client/src/components/layout/PageHeader.jsx` — reusable header with optional back button
+- [x] **12.4** Create page shells: `HomePage.jsx`, `WorkoutPage.jsx`, `HistoryPage.jsx`, `ExerciseHistoryPage.jsx`, `ProgramPage.jsx`
+- [x] **12.5** Verify: navigation between all pages works, bottom nav highlights correctly
 
 ## Phase 13: Frontend — Home Screen
 
-- [ ] **13.1** Create `client/src/components/home/HomeScreen.jsx` — fetches active program, determines today's day, shows date + day label
-- [ ] **13.2** Create `client/src/components/home/WorkoutPreview.jsx` — list of today's exercises with muscle group badges and set counts
-- [ ] **13.3** Create `client/src/components/home/RestDayMessage.jsx` — rest day display (Saturday)
-- [ ] **13.4** Add "Start Workout" button — calls `POST /api/workouts`, navigates to `/workout/:id`
-- [ ] **13.5** Add resume detection — calls `GET /api/workouts/current`; if in-progress session exists, show "Resume Workout" with progress summary instead of "Start Workout"
-- [ ] **13.6** Verify: home screen shows correct day/exercises, start creates session, resume detects in-progress
+- [x] **13.1** Create `client/src/components/home/HomeScreen.jsx` — fetches active program, determines today's day, shows date + day label
+- [x] **13.2** Create `client/src/components/home/WorkoutPreview.jsx` — list of today's exercises with muscle group badges and set counts
+- [x] **13.3** Create `client/src/components/home/RestDayMessage.jsx` — rest day display (Saturday)
+- [x] **13.4** Add "Start Workout" button — calls `POST /api/workouts`, navigates to `/workout/:id`
+- [x] **13.5** Add resume detection — calls `GET /api/workouts/current`; if in-progress session exists, show "Resume Workout" with progress summary instead of "Start Workout"
+- [x] **13.6** Verify: home screen shows correct day/exercises, start creates session, resume detects in-progress
 
 ## Phase 14: Frontend — Active Workout Core
 
