@@ -141,14 +141,14 @@
 
 ## Phase 14: Frontend — Active Workout Core
 
-- [ ] **14.1** Create `client/src/hooks/useWorkout.js` — manages active workout state: current exercise index, sets logged, exercise statuses, navigation between exercises
-- [ ] **14.2** Create `client/src/components/workout/ExerciseView.jsx` — main exercise screen with header (name, muscle group, progress indicator "Exercise X of Y")
-- [ ] **14.3** Create `client/src/components/workout/LastSessionCard.jsx` — compact dimmed card showing prior session's sets (weight, reps, RPE per set); "First time" message if no data; "History" link
-- [ ] **14.4** Create `client/src/components/workout/SetList.jsx` — shows completed sets (dimmed with checkmark), current set (highlighted), upcoming sets (dimmed placeholder)
-- [ ] **14.5** Create `client/src/components/workout/SetInput.jsx` — weight (numeric input), reps (numeric input), pre-filled from last session's corresponding set
-- [ ] **14.6** Create `client/src/components/workout/RpeSelector.jsx` — button row (7, 7.5, 8, 8.5, 9, 9.5, 10), never pre-filled, tap to select
-- [ ] **14.7** Implement "Log Set" action — save set via API, advance set counter, auto-start rest timer
-- [ ] **14.8** Verify: can navigate through exercises, log sets with pre-filled values, see last session data
+- [x] **14.1** Create `client/src/hooks/useWorkout.js` — manages active workout state: current exercise index, sets logged, exercise statuses, navigation between exercises
+- [x] **14.2** Create `client/src/components/workout/ExerciseView.jsx` — main exercise screen with header (name, muscle group, progress indicator "Exercise X of Y")
+- [x] **14.3** Create `client/src/components/workout/LastSessionCard.jsx` — compact dimmed card showing prior session's sets (weight, reps, RPE per set); "First time" message if no data; "History" link
+- [x] **14.4** Create `client/src/components/workout/SetList.jsx` — shows completed sets (dimmed with checkmark), current set (highlighted), upcoming sets (dimmed placeholder)
+- [x] **14.5** Create `client/src/components/workout/SetInput.jsx` — weight (numeric input), reps (numeric input), pre-filled from last session's corresponding set
+- [x] **14.6** Create `client/src/components/workout/RpeSelector.jsx` — button row (7, 7.5, 8, 8.5, 9, 9.5, 10), never pre-filled, tap to select
+- [x] **14.7** Implement "Log Set" action — save set via API, advance set counter, auto-start rest timer
+- [x] **14.8** Verify: can navigate through exercises, log sets with pre-filled values, see last session data
 
 ## Phase 15: Frontend — Rest Timer
 
