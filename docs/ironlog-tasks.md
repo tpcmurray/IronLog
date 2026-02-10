@@ -152,16 +152,16 @@
 
 ## Phase 15: Frontend — Rest Timer
 
-- [ ] **15.1** Create `client/src/hooks/useTimer.js` — countdown/overage timer with states: idle, countdown, overage; returns remaining/elapsed seconds, mode; actions: start, tick, dismiss, reset
-- [ ] **15.2** Create `client/src/hooks/useVibrate.js` — wrapper for `navigator.vibrate([200, 100, 200])` pattern
-- [ ] **15.3** Create `client/src/hooks/useWakeLock.js` — request/release screen wake lock during active workout
-- [ ] **15.4** Create `client/src/components/workout/RestTimer.jsx` — countdown display (large monospace digits, minutes:seconds, "Rest — X:XX prescribed" label, "Next: Set N of M")
-- [ ] **15.5** Implement overage mode in RestTimer — count up display, amber/warning styling, "+X:XX over" format, "Total rest: X:XX"
-- [ ] **15.6** Implement timer auto-start after logging a set (except last set of exercise)
-- [ ] **15.7** Implement dismiss button — stops timer, captures elapsed time
-- [ ] **15.8** Wire timer to set logging — when next set is logged, `rest_duration_seconds` = total elapsed from timer dismiss
-- [ ] **15.9** Implement vibration at countdown zero
-- [ ] **15.10** Verify: timer starts after set, counts down, transitions to overage, vibrates, rest duration captured in set log
+- [x] **15.1** Create `client/src/hooks/useTimer.js` — countdown/overage timer with states: idle, countdown, overage; returns remaining/elapsed seconds, mode; actions: start, tick, dismiss, reset
+- [x] **15.2** Create `client/src/hooks/useVibrate.js` — wrapper for `navigator.vibrate([200, 100, 200])` pattern
+- [x] **15.3** Create `client/src/hooks/useWakeLock.js` — request/release screen wake lock during active workout
+- [x] **15.4** Create `client/src/components/workout/RestTimer.jsx` — countdown display (large monospace digits, minutes:seconds, "Rest — X:XX prescribed" label, "Next: Set N of M")
+- [x] **15.5** Implement overage mode in RestTimer — count up display, amber/warning styling, "+X:XX over" format, "Total rest: X:XX"
+- [x] **15.6** Implement timer auto-start after logging a set (except last set of exercise)
+- [x] **15.7** Implement dismiss button — stops timer, captures elapsed time
+- [x] **15.8** Wire timer to set logging — when next set is logged, `rest_duration_seconds` = total elapsed from timer dismiss
+- [x] **15.9** Implement vibration at countdown zero
+- [x] **15.10** Verify: timer starts after set, counts down, transitions to overage, vibrates, rest duration captured in set log
 
 ## Phase 16: Frontend — Workout Flow Control
 

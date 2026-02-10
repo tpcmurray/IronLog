@@ -2,6 +2,7 @@ import MuscleGroupBadge from '../common/MuscleGroupBadge';
 import LastSessionCard from './LastSessionCard';
 import SetList from './SetList';
 import SetInput from './SetInput';
+import RestTimer from './RestTimer';
 
 export default function ExerciseView({
   exercise,
@@ -10,9 +11,12 @@ export default function ExerciseView({
   nextSetNumber,
   prefill,
   onLogSet,
+  timer,
+  onDismissTimer,
 }) {
   const isComplete =
     exercise.status === 'completed' || exercise.status === 'partial';
+  const showTimer = timer && timer.mode !== 'idle';
 
   return (
     <div className="p-5 pt-10">
@@ -33,15 +37,15 @@ export default function ExerciseView({
         )}
       </div>
 
-      {/* Last Session */}
-      {!isComplete && (
+      {/* Last Session (hidden during timer) */}
+      {!isComplete && !showTimer && (
         <LastSessionCard
           lastSession={exercise.last_session}
           exerciseId={exercise.exercise_id}
         />
       )}
 
-      {/* Set List + Input */}
+      {/* Set List */}
       <SetList
         sets={exercise.sets || []}
         targetSets={exercise.target_sets}
@@ -49,8 +53,21 @@ export default function ExerciseView({
         isComplete={isComplete}
       />
 
-      {/* Current set input (when not complete) */}
-      {!isComplete && (
+      {/* Timer */}
+      {showTimer && (
+        <RestTimer
+          mode={timer.mode}
+          remaining={timer.remaining}
+          elapsed={timer.elapsed}
+          prescribed={timer.prescribed}
+          nextSetNumber={nextSetNumber}
+          targetSets={exercise.target_sets}
+          onDismiss={onDismissTimer}
+        />
+      )}
+
+      {/* Current set input (when not complete and timer not running) */}
+      {!isComplete && !showTimer && (
         <SetInput
           setNumber={nextSetNumber}
           targetSets={exercise.target_sets}

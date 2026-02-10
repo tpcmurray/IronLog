@@ -31,7 +31,7 @@ export default function useWorkout(workout) {
 
   // Log a set for the current exercise
   const logSet = useCallback(
-    async ({ weight, reps, rpe }) => {
+    async ({ weight, reps, rpe, restDurationSeconds }) => {
       const ex = exercises[currentIndex];
       if (!ex) return null;
 
@@ -51,6 +51,10 @@ export default function useWorkout(workout) {
         rpe: parseFloat(rpe),
         prescribed_rest_seconds: ex.rest_seconds,
       };
+
+      if (restDurationSeconds != null) {
+        body.rest_duration_seconds = restDurationSeconds;
+      }
 
       const newSet = await apiLogSet(workout.id, ex.id, body);
 
