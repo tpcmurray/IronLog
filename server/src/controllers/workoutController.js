@@ -566,7 +566,7 @@ async function getWorkoutHistory(req, res, next) {
     for (const w of workouts) {
       // Get exercises with sets
       const { rows: exercises } = await pool.query(
-        `SELECT se.id, se.status, se.skip_reason,
+        `SELECT se.id, se.exercise_id, se.status, se.skip_reason,
                 e.name AS exercise_name, e.muscle_group
          FROM session_exercises se
          JOIN exercises e ON e.id = se.exercise_id
@@ -602,6 +602,7 @@ async function getWorkoutHistory(req, res, next) {
         day_of_week: w.day_of_week,
         date: w.started_at,
         exercises: exercises.map((ex) => ({
+          exercise_id: ex.exercise_id,
           exercise_name: ex.exercise_name,
           muscle_group: ex.muscle_group,
           status: ex.status,
