@@ -176,14 +176,14 @@
 
 ## Phase 17: Frontend — Workout Completion
 
-- [ ] **17.1** Create `client/src/components/workout/WorkoutComplete.jsx`:
+- [x] **17.1** Create `client/src/components/workout/WorkoutComplete.jsx`:
   - "Workout Complete" header with date and total duration
   - Progression indicator ("X of Y exercises progressed")
   - Summary grid: each exercise with muscle group badge, sets (weight x reps @ RPE), progression status (up/same/down arrows)
   - Skipped exercises greyed out with reason
   - "Done" button returns to home
-- [ ] **17.2** Wire completion — after last exercise, call `PUT /api/workouts/:id/complete`, display completion screen with response data
-- [ ] **17.3** Verify: completing a workout shows correct progression summary, done returns to home
+- [x] **17.2** Wire completion — after last exercise, call `PUT /api/workouts/:id/complete`, display completion screen with response data
+- [x] **17.3** Verify: completing a workout shows correct progression summary, done returns to home
 
 ## Phase 18: Frontend — Workout History
 

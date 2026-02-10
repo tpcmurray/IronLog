@@ -1,12 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getCurrentWorkout } from '../api/workouts';
+import { getCurrentWorkout, completeWorkout as apiCompleteWorkout } from '../api/workouts';
 import useWorkout from '../hooks/useWorkout';
 import useTimer from '../hooks/useTimer';
 import useVibrate from '../hooks/useVibrate';
 import useWakeLock from '../hooks/useWakeLock';
 import ExerciseView from '../components/workout/ExerciseView';
 import SkipModal from '../components/workout/SkipModal';
+import WorkoutComplete from '../components/workout/WorkoutComplete';
 
 export default function WorkoutPage() {
   const { id } = useParams();
@@ -55,7 +56,6 @@ export default function WorkoutPage() {
 }
 
 function WorkoutContent({ workout }) {
-  const navigate = useNavigate();
   const {
     exercises,
     currentExercise,
@@ -76,22 +76,49 @@ function WorkoutContent({ workout }) {
   const [pendingRestDuration, setPendingRestDuration] = useState(null);
   const [showSkipModal, setShowSkipModal] = useState(false);
   const [isSuperset, setIsSuperset] = useState(false);
+  const [completionResult, setCompletionResult] = useState(null);
+  const [completing, setCompleting] = useState(false);
 
-  // Keep screen awake during workout
-  useWakeLock(true);
+  // Keep screen awake during active workout (not on completion screen)
+  useWakeLock(!completionResult);
 
   const isLastExercise = currentIndex >= totalExercises - 1;
 
+  // Complete the entire workout via API
+  const finishWorkout = useCallback(async () => {
+    setCompleting(true);
+    try {
+      // Complete current exercise first if not already
+      const curEx = exercises[currentIndex];
+      if (curEx && curEx.status !== 'completed' && curEx.status !== 'partial' && curEx.status !== 'skipped') {
+        await completeCurrentExercise();
+      }
+      const result = await apiCompleteWorkout(workout.id);
+      timer.reset();
+      setCompletionResult(result);
+    } catch {
+      // If already completed (409), still show completion
+      try {
+        const result = await apiCompleteWorkout(workout.id);
+        setCompletionResult(result);
+      } catch {
+        // Fallback — just go home
+        setCompletionResult(null);
+      }
+    } finally {
+      setCompleting(false);
+    }
+  }, [exercises, currentIndex, completeCurrentExercise, workout.id, timer]);
+
   // Advance to next exercise, handling completion + superset auto-advance
   const advanceToNext = useCallback(async () => {
-    // Complete current exercise first
     await completeCurrentExercise();
     timer.reset();
     setPendingRestDuration(null);
 
     if (isLastExercise) {
-      // All done — Phase 17 will handle workout completion
-      navigate(`/workout/${workout.id}`);
+      // Last exercise done — complete the whole workout
+      await finishWorkout();
       return;
     }
 
@@ -104,7 +131,7 @@ function WorkoutContent({ workout }) {
     }
 
     goNext();
-  }, [completeCurrentExercise, timer, isLastExercise, exercises, currentIndex, goNext, navigate, workout.id]);
+  }, [completeCurrentExercise, timer, isLastExercise, exercises, currentIndex, goNext, finishWorkout]);
 
   // Wrap logSet to include rest duration and auto-start timer / auto-advance
   const handleLogSet = useCallback(
@@ -152,12 +179,14 @@ function WorkoutContent({ workout }) {
       timer.reset();
       setPendingRestDuration(null);
 
-      if (!isLastExercise) {
+      if (isLastExercise) {
+        await finishWorkout();
+      } else {
         setIsSuperset(false);
         goNext();
       }
     },
-    [skipCurrentExercise, timer, isLastExercise, goNext]
+    [skipCurrentExercise, timer, isLastExercise, goNext, finishWorkout]
   );
 
   const handlePrev = useCallback(() => {
@@ -174,6 +203,19 @@ function WorkoutContent({ workout }) {
   const handleAddExtraSet = useCallback(() => {
     addExtraSet();
   }, [addExtraSet]);
+
+  // Show completion screen
+  if (completionResult) {
+    return <WorkoutComplete result={completionResult} />;
+  }
+
+  if (completing) {
+    return (
+      <div className="p-6 pt-14 text-center">
+        <p className="text-text-muted text-sm">Completing workout...</p>
+      </div>
+    );
+  }
 
   if (!currentExercise) {
     return (
