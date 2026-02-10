@@ -91,7 +91,7 @@ async function getExerciseHistory(req, res, next) {
 
     // Verify exercise exists and get info
     const { rows: exRows } = await pool.query(
-      'SELECT id, name, muscle_group FROM exercises WHERE id = $1', [id]
+      'SELECT id, name, muscle_group, default_rest_seconds FROM exercises WHERE id = $1', [id]
     );
     if (exRows.length === 0) {
       throw createError(404, 'Exercise not found', 'NOT_FOUND');
