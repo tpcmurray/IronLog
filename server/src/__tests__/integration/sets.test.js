@@ -14,14 +14,14 @@ beforeEach(() => {
 });
 
 describe('POST /api/workouts/:workoutId/exercises/:sessionExerciseId/sets', () => {
-  it('logs a set and computes rest_was_extended', async () => {
+  it('logs a set and computes rest_was_extended (>10s tolerance)', async () => {
     // Verify session exercise
     pool.query.mockResolvedValueOnce({ rows: [{ id: SEID }] });
     // INSERT returning
     pool.query.mockResolvedValueOnce({
       rows: [{
         id: SET_ID, set_number: 1, weight_lbs: '95.0', reps: 8, rpe: '7.5',
-        rest_duration_seconds: 125, prescribed_rest_seconds: 120,
+        rest_duration_seconds: 135, prescribed_rest_seconds: 120,
         rest_was_extended: true, created_at: '2026-01-25T14:35:22Z',
       }],
     });
@@ -30,7 +30,7 @@ describe('POST /api/workouts/:workoutId/exercises/:sessionExerciseId/sets', () =
       .post(`/api/workouts/${WID}/exercises/${SEID}/sets`)
       .send({
         set_number: 1, weight_lbs: 95, reps: 8, rpe: 7.5,
-        rest_duration_seconds: 125, prescribed_rest_seconds: 120,
+        rest_duration_seconds: 135, prescribed_rest_seconds: 120,
       });
 
     expect(res.status).toBe(201);

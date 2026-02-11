@@ -139,8 +139,13 @@ describe('validateSetFields', () => {
     expect(errors).toEqual([]);
   });
 
-  it('rejects zero weight_lbs', () => {
+  it('accepts zero weight_lbs', () => {
     const errors = validateSetFields({ weight_lbs: 0 });
+    expect(errors).toEqual([]);
+  });
+
+  it('rejects negative weight_lbs', () => {
+    const errors = validateSetFields({ weight_lbs: -1 });
     expect(errors.length).toBe(1);
     expect(errors[0]).toContain('weight_lbs');
   });
@@ -152,7 +157,7 @@ describe('validateSetFields', () => {
   });
 
   it('returns multiple errors for multiple bad fields', () => {
-    const errors = validateSetFields({ rpe: 5, reps: -1, weight_lbs: 0, set_number: 0 });
+    const errors = validateSetFields({ rpe: 5, reps: -1, weight_lbs: -1, set_number: 0 });
     expect(errors.length).toBe(4);
   });
 

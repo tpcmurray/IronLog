@@ -14,8 +14,8 @@ function validateSetFields(body) {
   if (body.reps !== undefined && (typeof body.reps !== 'number' || body.reps < 0)) {
     errors.push('reps must be >= 0');
   }
-  if (body.weight_lbs !== undefined && (typeof body.weight_lbs !== 'number' || body.weight_lbs <= 0)) {
-    errors.push('weight_lbs must be > 0');
+  if (body.weight_lbs !== undefined && (typeof body.weight_lbs !== 'number' || body.weight_lbs < 0)) {
+    errors.push('weight_lbs must be >= 0');
   }
   if (body.set_number !== undefined && (typeof body.set_number !== 'number' || body.set_number < 1)) {
     errors.push('set_number must be >= 1');
@@ -44,9 +44,9 @@ async function logSet(req, res, next) {
       throw createError(404, 'Session exercise not found', 'NOT_FOUND');
     }
 
-    // Compute rest_was_extended
+    // Compute rest_was_extended (10s tolerance)
     const restWasExtended = (rest_duration_seconds != null && prescribed_rest_seconds != null)
-      ? rest_duration_seconds > prescribed_rest_seconds
+      ? rest_duration_seconds > prescribed_rest_seconds + 10
       : false;
 
     const { rows } = await pool.query(
@@ -124,7 +124,7 @@ async function editSet(req, res, next) {
       const restDuration = req.body.rest_duration_seconds ?? current[0].rest_duration_seconds;
       const prescribed = req.body.prescribed_rest_seconds ?? current[0].prescribed_rest_seconds;
       const restWasExtended = (restDuration != null && prescribed != null)
-        ? restDuration > prescribed
+        ? restDuration > prescribed + 10
         : false;
       updates.push(`rest_was_extended = $${paramIndex}`);
       values.push(restWasExtended);
