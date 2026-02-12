@@ -103,8 +103,13 @@ export default function ExerciseHistory({ exerciseId }) {
   );
 }
 
+function isRestExtended(set, prescribedRest) {
+  return set.rest_duration_seconds != null && prescribedRest != null
+    && set.rest_duration_seconds > prescribedRest + 10;
+}
+
 function SessionCard({ session, prescribedRest }) {
-  const extendedSets = session.sets.filter((s) => s.rest_was_extended);
+  const extendedSets = session.sets.filter((s) => isRestExtended(s, prescribedRest));
 
   return (
     <div className="bg-[#1a1a30] rounded-xl p-4 mb-3">
@@ -116,18 +121,21 @@ function SessionCard({ session, prescribedRest }) {
       </div>
 
       <div className="font-mono text-xs text-text-secondary">
-        {session.sets.map((s) => (
-          <div key={s.set_number} className="flex justify-between mb-1">
-            <span>
-              Set {s.set_number}: {formatWeight(s.weight_lbs)} lbs &times; {s.reps} reps @ RPE {s.rpe}
-            </span>
-            <span className={s.rest_was_extended ? 'text-progress-same' : 'text-text-muted'}>
-              {s.rest_duration_seconds != null
-                ? formatTime(s.rest_duration_seconds) + (s.rest_was_extended ? ' ⚠' : '')
-                : '—'}
-            </span>
-          </div>
-        ))}
+        {session.sets.map((s) => {
+          const extended = isRestExtended(s, prescribedRest);
+          return (
+            <div key={s.set_number} className="flex justify-between mb-1">
+              <span>
+                Set {s.set_number}: {formatWeight(s.weight_lbs)} lbs &times; {s.reps} reps @ RPE {s.rpe}
+              </span>
+              <span className={extended ? 'text-progress-same' : 'text-text-muted'}>
+                {s.rest_duration_seconds != null
+                  ? formatTime(s.rest_duration_seconds) + (extended ? ' ⚠' : '')
+                  : '—'}
+              </span>
+            </div>
+          );
+        })}
       </div>
 
       {extendedSets.length > 0 && (
