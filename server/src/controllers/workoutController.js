@@ -374,6 +374,7 @@ async function buildCompletionStats(client, workoutId) {
 }
 
 async function getCurrentWorkout(_req, res, next) {
+  const client = await pool.connect();
   try {
     // First check for in-progress workout
     const { rows } = await pool.query(
@@ -381,14 +382,58 @@ async function getCurrentWorkout(_req, res, next) {
     );
 
     if (rows.length > 0) {
-      const data = await buildWorkoutResponse(pool, rows[0].id);
+      const workoutId = rows[0].id;
+
+      // Check if all exercises in this workout are done
+      const { rows: exercises } = await client.query(
+        `SELECT status FROM session_exercises WHERE workout_session_id = $1`,
+        [workoutId]
+      );
+
+      const allDone = exercises.length > 0 && exercises.every(
+        e => e.status === 'completed' || e.status === 'partial' || e.status === 'skipped'
+      );
+
+      // If all exercises are done, auto-complete the workout and return completion stats
+      if (allDone) {
+        await client.query('BEGIN');
+
+        // Mark remaining pending exercises as skipped (shouldn't be any, but just in case)
+        await client.query(
+          `UPDATE session_exercises SET status = 'skipped', completed_at = NOW()
+           WHERE workout_session_id = $1 AND status = 'pending'`,
+          [workoutId]
+        );
+
+        // Complete the workout
+        await client.query(
+          'UPDATE workout_sessions SET completed_at = NOW() WHERE id = $1',
+          [workoutId]
+        );
+
+        await client.query('COMMIT');
+
+        // Build response with completion stats
+        const data = await buildWorkoutResponse(pool, workoutId);
+        const completionStats = await buildCompletionStats(client, workoutId);
+
+        return res.json({
+          data: {
+            ...data,
+            ...completionStats,
+          },
+        });
+      }
+
+      // Otherwise, return the in-progress workout normally
+      const data = await buildWorkoutResponse(pool, workoutId);
       return res.json({ data });
     }
 
-    // If no in-progress workout, check for completed workout from today
+    // If no in-progress workout, check for most recent completed workout
     const { rows: completedRows } = await pool.query(
       `SELECT id FROM workout_sessions
-       WHERE started_at::date = CURRENT_DATE AND completed_at IS NOT NULL
+       WHERE completed_at IS NOT NULL
        ORDER BY completed_at DESC LIMIT 1`
     );
 
@@ -397,23 +442,21 @@ async function getCurrentWorkout(_req, res, next) {
     }
 
     // Build response with completion stats
-    const client = await pool.connect();
-    try {
-      const workoutId = completedRows[0].id;
-      const data = await buildWorkoutResponse(pool, workoutId);
-      const completionStats = await buildCompletionStats(client, workoutId);
+    const workoutId = completedRows[0].id;
+    const data = await buildWorkoutResponse(pool, workoutId);
+    const completionStats = await buildCompletionStats(client, workoutId);
 
-      res.json({
-        data: {
-          ...data,
-          ...completionStats,
-        },
-      });
-    } finally {
-      client.release();
-    }
+    res.json({
+      data: {
+        ...data,
+        ...completionStats,
+      },
+    });
   } catch (err) {
+    await client.query('ROLLBACK').catch(() => {});
     next(err);
+  } finally {
+    client.release();
   }
 }
 

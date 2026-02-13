@@ -5,6 +5,7 @@ import { getCurrentWorkout, startWorkout } from '../api/workouts';
 import { DAY_LABELS } from '../utils/constants';
 import WorkoutPreview from '../components/home/WorkoutPreview';
 import RestDayMessage from '../components/home/RestDayMessage';
+import WorkoutComplete from '../components/workout/WorkoutComplete';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -43,6 +44,7 @@ export default function HomePage() {
   const todayDay = program?.days?.find((d) => d.day_of_week === dayOfWeek);
   const isRestDay = todayDay?.is_rest_day;
   const hasWorkout = currentWorkout != null;
+  const isWorkoutCompleted = currentWorkout?.progression != null;
 
   async function handleStart() {
     if (!todayDay) return;
@@ -97,6 +99,8 @@ export default function HomePage() {
 
       {isRestDay && !hasWorkout ? (
         <RestDayMessage />
+      ) : isWorkoutCompleted ? (
+        <WorkoutComplete result={currentWorkout} showDoneButton={false} />
       ) : hasWorkout ? (
         <>
           <WorkoutPreview exercises={currentWorkout.exercises} inProgress />

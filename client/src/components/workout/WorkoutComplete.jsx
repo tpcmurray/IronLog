@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import MuscleGroupBadge from '../common/MuscleGroupBadge';
 import { formatWeight, formatDuration } from '../../utils/formatters';
 
-export default function WorkoutComplete({ result }) {
+export default function WorkoutComplete({ result, showDoneButton = true }) {
   const navigate = useNavigate();
   const { progression, duration_minutes, started_at } = result;
 
@@ -49,13 +49,17 @@ export default function WorkoutComplete({ result }) {
       ))}
 
       {/* Done button */}
-      <div className="h-4" />
-      <button
-        onClick={() => navigate('/')}
-        className="w-full rounded-xl py-4 text-lg font-semibold text-white bg-accent"
-      >
-        Done
-      </button>
+      {showDoneButton && (
+        <>
+          <div className="h-4" />
+          <button
+            onClick={() => navigate('/')}
+            className="w-full rounded-xl py-4 text-lg font-semibold text-white bg-accent"
+          >
+            Done
+          </button>
+        </>
+      )}
     </div>
   );
 }
