@@ -4,6 +4,7 @@ import SetList from './SetList';
 import SetInput from './SetInput';
 import RestTimer from './RestTimer';
 import SupersetBanner from './SupersetBanner';
+import NextExercisePreview from './NextExercisePreview';
 
 export default function ExerciseView({
   exercise,
@@ -21,6 +22,7 @@ export default function ExerciseView({
   isSuperset,
   prevExerciseName,
   isLastExercise,
+  nextExercise,
 }) {
   const isComplete =
     exercise.status === 'completed' || exercise.status === 'partial';
@@ -111,6 +113,11 @@ export default function ExerciseView({
           >
             + Add Extra Set
           </button>
+
+          {/* Next exercise preview */}
+          {nextExercise && (
+            <NextExercisePreview nextExercise={nextExercise} />
+          )}
         </div>
       )}
 

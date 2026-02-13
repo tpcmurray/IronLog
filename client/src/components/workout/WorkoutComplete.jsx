@@ -71,6 +71,12 @@ const PROGRESSION_LABELS = {
 function ExerciseSummaryCard({ detail, sets }) {
   const label = PROGRESSION_LABELS[detail.status] || PROGRESSION_LABELS.same;
 
+  // Add rep difference to label text for volume progression
+  let displayText = label.text;
+  if (detail.status === 'progressed' && detail.reason === 'higher_volume' && detail.rep_difference) {
+    displayText = `${label.text} (+${detail.rep_difference} reps)`;
+  }
+
   return (
     <div
       className={`bg-[#1a1a30] rounded-lg p-3 mb-2 ${
@@ -88,7 +94,7 @@ function ExerciseSummaryCard({ detail, sets }) {
             {detail.exercise_name}
           </span>
         </div>
-        <span className={`text-xs ${label.cls}`}>{label.text}</span>
+        <span className={`text-xs ${label.cls}`}>{displayText}</span>
       </div>
 
       {detail.status === 'skipped' ? (

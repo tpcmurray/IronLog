@@ -56,6 +56,11 @@ export default function WorkoutPage() {
 }
 
 function WorkoutContent({ workout }) {
+  // If workout is already completed (has progression data), show completion screen
+  if (workout.progression) {
+    return <WorkoutComplete result={workout} />;
+  }
+
   const {
     exercises,
     currentExercise,
@@ -233,6 +238,9 @@ function WorkoutContent({ workout }) {
       ? exercises[currentIndex - 1]?.exercise_name
       : null;
 
+  // Get next exercise for preview
+  const nextExercise = !isLastExercise ? exercises[currentIndex + 1] : null;
+
   return (
     <>
       <ExerciseView
@@ -251,6 +259,7 @@ function WorkoutContent({ workout }) {
         isSuperset={isSuperset}
         prevExerciseName={prevExerciseName}
         isLastExercise={isLastExercise}
+        nextExercise={nextExercise}
       />
 
       {showSkipModal && (

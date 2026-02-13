@@ -20,12 +20,13 @@ describe('compareProgression', () => {
     });
   });
 
-  it('returns progressed with higher_reps when reps increased at same weight', () => {
+  it('returns progressed with higher_volume when total reps increased at same weight', () => {
     const current = [{ set_number: 1, weight_lbs: 100, reps: 10 }];
     const previous = [{ set_number: 1, weight_lbs: 100, reps: 8 }];
     expect(compareProgression(current, previous)).toEqual({
       status: 'progressed',
-      reason: 'higher_reps',
+      reason: 'higher_volume',
+      rep_difference: 2,
     });
   });
 
@@ -68,12 +69,13 @@ describe('compareProgression', () => {
     });
   });
 
-  it('ignores sets with no matching set_number in previous', () => {
+  it('ignores unmatched sets when computing volume', () => {
     const current = [
       { set_number: 1, weight_lbs: 100, reps: 8 },
-      { set_number: 5, weight_lbs: 200, reps: 20 },
+      { set_number: 5, weight_lbs: 100, reps: 20 },
     ];
     const previous = [{ set_number: 1, weight_lbs: 100, reps: 8 }];
+    // Only set 1 matches, weight same, reps same → status: same
     expect(compareProgression(current, previous)).toEqual({ status: 'same' });
   });
 
@@ -90,5 +92,39 @@ describe('compareProgression', () => {
       status: 'progressed',
       reason: 'higher_weight',
     });
+  });
+
+  it('returns progressed with total volume increase across multiple sets', () => {
+    const current = [
+      { set_number: 1, weight_lbs: 100, reps: 10 },
+      { set_number: 2, weight_lbs: 100, reps: 9 },
+      { set_number: 3, weight_lbs: 100, reps: 8 },
+      { set_number: 4, weight_lbs: 100, reps: 8 },
+    ];
+    const previous = [
+      { set_number: 1, weight_lbs: 100, reps: 8 },
+      { set_number: 2, weight_lbs: 100, reps: 8 },
+      { set_number: 3, weight_lbs: 100, reps: 8 },
+      { set_number: 4, weight_lbs: 100, reps: 8 },
+    ];
+    expect(compareProgression(current, previous)).toEqual({
+      status: 'progressed',
+      reason: 'higher_volume',
+      rep_difference: 3,
+    });
+  });
+
+  it('returns regressed when total volume decreased at same weight', () => {
+    const current = [
+      { set_number: 1, weight_lbs: 100, reps: 8 },
+      { set_number: 2, weight_lbs: 100, reps: 7 },
+      { set_number: 3, weight_lbs: 100, reps: 6 },
+    ];
+    const previous = [
+      { set_number: 1, weight_lbs: 100, reps: 8 },
+      { set_number: 2, weight_lbs: 100, reps: 8 },
+      { set_number: 3, weight_lbs: 100, reps: 8 },
+    ];
+    expect(compareProgression(current, previous)).toEqual({ status: 'regressed' });
   });
 });

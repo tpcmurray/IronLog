@@ -129,6 +129,9 @@ describe('GET /api/workouts/current', () => {
   });
 
   it('returns null data when no session in progress', async () => {
+    // Mock for checking in-progress workouts
+    pool.query.mockResolvedValueOnce({ rows: [] });
+    // Mock for checking completed workouts from today
     pool.query.mockResolvedValueOnce({ rows: [] });
 
     const res = await request(app).get('/api/workouts/current');

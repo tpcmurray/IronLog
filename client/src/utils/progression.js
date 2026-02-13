@@ -4,9 +4,10 @@ export function compareProgression(currentSets, previousSets) {
   }
 
   let hasHigherWeight = false;
-  let hasHigherReps = false;
-  let hasLowerPerformance = false;
+  let hasLowerWeight = false;
+  let allWeightsSame = true;
 
+  // First pass: detect weight changes
   for (const current of currentSets) {
     const previous = previousSets.find((s) => s.set_number === current.set_number);
     if (!previous) continue;
@@ -16,19 +17,41 @@ export function compareProgression(currentSets, previousSets) {
 
     if (curWeight > prevWeight) {
       hasHigherWeight = true;
-    } else if (curWeight === prevWeight) {
-      if (current.reps > previous.reps) {
-        hasHigherReps = true;
-      } else if (current.reps < previous.reps) {
-        hasLowerPerformance = true;
-      }
-    } else {
-      hasLowerPerformance = true;
+      allWeightsSame = false;
+    } else if (curWeight < prevWeight) {
+      hasLowerWeight = true;
+      allWeightsSame = false;
     }
   }
 
+  // Weight changes take priority
   if (hasHigherWeight) return { status: 'progressed', reason: 'higher_weight' };
-  if (hasHigherReps) return { status: 'progressed', reason: 'higher_reps' };
-  if (!hasLowerPerformance) return { status: 'same' };
-  return { status: 'regressed' };
+  if (hasLowerWeight) return { status: 'regressed' };
+
+  // If all weights same, compare total volume (only for matched sets)
+  if (allWeightsSame) {
+    let currentTotalReps = 0;
+    let previousTotalReps = 0;
+
+    for (const current of currentSets) {
+      const previous = previousSets.find((s) => s.set_number === current.set_number);
+      if (previous) {
+        currentTotalReps += current.reps;
+        previousTotalReps += previous.reps;
+      }
+    }
+
+    if (currentTotalReps > previousTotalReps) {
+      return {
+        status: 'progressed',
+        reason: 'higher_volume',
+        rep_difference: currentTotalReps - previousTotalReps
+      };
+    }
+    if (currentTotalReps < previousTotalReps) {
+      return { status: 'regressed' };
+    }
+  }
+
+  return { status: 'same' };
 }

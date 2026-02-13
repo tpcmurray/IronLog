@@ -18,7 +18,7 @@ export default function SetList({ sets, targetSets, nextSetNumber, isComplete })
           className="bg-[#1a1a30] rounded-lg px-3 py-2 flex items-center justify-between mb-2 opacity-50"
         >
           <span className="text-xs text-text-muted">Set {s.set_number}</span>
-          <span className="font-mono text-[13px] text-text-muted">
+          <span className="font-mono text-[13px] text-text-secondary">
             {formatWeight(s.weight_lbs)} lbs &times; {s.reps} reps @ RPE {s.rpe}
           </span>
           <span className="text-progress-up text-xs">&#10003;</span>

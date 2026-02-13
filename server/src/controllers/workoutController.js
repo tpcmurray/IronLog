@@ -147,9 +147,10 @@ function compareProgression(currentSets, previousSets) {
   }
 
   let hasHigherWeight = false;
-  let hasHigherReps = false;
-  let hasLowerPerformance = false;
+  let hasLowerWeight = false;
+  let allWeightsSame = true;
 
+  // First pass: detect weight changes
   for (const current of currentSets) {
     const previous = previousSets.find((s) => s.set_number === current.set_number);
     if (!previous) continue;
@@ -159,21 +160,43 @@ function compareProgression(currentSets, previousSets) {
 
     if (curWeight > prevWeight) {
       hasHigherWeight = true;
-    } else if (curWeight === prevWeight) {
-      if (current.reps > previous.reps) {
-        hasHigherReps = true;
-      } else if (current.reps < previous.reps) {
-        hasLowerPerformance = true;
-      }
-    } else {
-      hasLowerPerformance = true;
+      allWeightsSame = false;
+    } else if (curWeight < prevWeight) {
+      hasLowerWeight = true;
+      allWeightsSame = false;
     }
   }
 
+  // Weight changes take priority
   if (hasHigherWeight) return { status: 'progressed', reason: 'higher_weight' };
-  if (hasHigherReps) return { status: 'progressed', reason: 'higher_reps' };
-  if (!hasLowerPerformance) return { status: 'same' };
-  return { status: 'regressed' };
+  if (hasLowerWeight) return { status: 'regressed' };
+
+  // If all weights same, compare total volume (only for matched sets)
+  if (allWeightsSame) {
+    let currentTotalReps = 0;
+    let previousTotalReps = 0;
+
+    for (const current of currentSets) {
+      const previous = previousSets.find((s) => s.set_number === current.set_number);
+      if (previous) {
+        currentTotalReps += current.reps;
+        previousTotalReps += previous.reps;
+      }
+    }
+
+    if (currentTotalReps > previousTotalReps) {
+      return {
+        status: 'progressed',
+        reason: 'higher_volume',
+        rep_difference: currentTotalReps - previousTotalReps
+      };
+    }
+    if (currentTotalReps < previousTotalReps) {
+      return { status: 'regressed' };
+    }
+  }
+
+  return { status: 'same' };
 }
 
 /**
@@ -276,18 +299,119 @@ async function startWorkout(req, res, next) {
   }
 }
 
+async function buildCompletionStats(client, workoutId) {
+  const { rows: workout } = await client.query(
+    'SELECT id, started_at, completed_at FROM workout_sessions WHERE id = $1',
+    [workoutId]
+  );
+  const durationMs = new Date(workout[0].completed_at) - new Date(workout[0].started_at);
+  const durationMinutes = Math.round(durationMs / 60000);
+
+  // Get exercises with their sets
+  const { rows: exercises } = await client.query(
+    `SELECT se.id, se.exercise_id, se.status, se.skip_reason,
+            e.name AS exercise_name, e.muscle_group
+     FROM session_exercises se
+     JOIN exercises e ON e.id = se.exercise_id
+     WHERE se.workout_session_id = $1
+     ORDER BY se.sort_order`,
+    [workoutId]
+  );
+
+  // Compute progression for each completed/partial exercise
+  const details = [];
+  let progressed = 0;
+  let same = 0;
+  let regressed = 0;
+  let skipped = 0;
+
+  for (const ex of exercises) {
+    if (ex.status === 'skipped') {
+      skipped++;
+      details.push({
+        exercise_name: ex.exercise_name,
+        muscle_group: ex.muscle_group,
+        status: 'skipped',
+        skip_reason: ex.skip_reason,
+      });
+      continue;
+    }
+
+    // Get current session sets
+    const { rows: currentSets } = await client.query(
+      'SELECT set_number, weight_lbs, reps FROM set_logs WHERE session_exercise_id = $1 ORDER BY set_number',
+      [ex.id]
+    );
+
+    // Get last session for comparison
+    const lastSession = await fetchLastSession(client, ex.exercise_id, workoutId);
+    const progression = compareProgression(currentSets, lastSession?.sets || []);
+
+    if (progression.status === 'progressed' || progression.status === 'first_time') progressed++;
+    else if (progression.status === 'same') same++;
+    else regressed++;
+
+    details.push({
+      exercise_name: ex.exercise_name,
+      muscle_group: ex.muscle_group,
+      status: progression.status,
+      reason: progression.reason,
+      rep_difference: progression.rep_difference,
+    });
+  }
+
+  return {
+    duration_minutes: durationMinutes,
+    progression: {
+      total_exercises: exercises.length,
+      progressed,
+      same,
+      regressed,
+      skipped,
+      details,
+    },
+  };
+}
+
 async function getCurrentWorkout(_req, res, next) {
   try {
+    // First check for in-progress workout
     const { rows } = await pool.query(
       'SELECT id FROM workout_sessions WHERE completed_at IS NULL ORDER BY started_at DESC LIMIT 1'
     );
 
-    if (rows.length === 0) {
+    if (rows.length > 0) {
+      const data = await buildWorkoutResponse(pool, rows[0].id);
+      return res.json({ data });
+    }
+
+    // If no in-progress workout, check for completed workout from today
+    const { rows: completedRows } = await pool.query(
+      `SELECT id FROM workout_sessions
+       WHERE started_at::date = CURRENT_DATE AND completed_at IS NOT NULL
+       ORDER BY completed_at DESC LIMIT 1`
+    );
+
+    if (completedRows.length === 0) {
       return res.json({ data: null });
     }
 
-    const data = await buildWorkoutResponse(pool, rows[0].id);
-    res.json({ data });
+    // Build response with completion stats
+    const client = await pool.connect();
+    try {
+      const workoutId = completedRows[0].id;
+      const data = await buildWorkoutResponse(pool, workoutId);
+      const completionStats = await buildCompletionStats(client, workoutId);
+
+      res.json({
+        data: {
+          ...data,
+          ...completionStats,
+        },
+      });
+    } finally {
+      client.release();
+    }
   } catch (err) {
     next(err);
   }
@@ -328,80 +452,13 @@ async function completeWorkout(req, res, next) {
     await client.query('COMMIT');
 
     // Build response with progression data
-    const { rows: workout } = await client.query(
-      'SELECT id, started_at, completed_at FROM workout_sessions WHERE id = $1',
-      [id]
-    );
-    const durationMs = new Date(workout[0].completed_at) - new Date(workout[0].started_at);
-    const durationMinutes = Math.round(durationMs / 60000);
-
-    // Get exercises with their sets
-    const { rows: exercises } = await client.query(
-      `SELECT se.id, se.exercise_id, se.status, se.skip_reason,
-              e.name AS exercise_name, e.muscle_group
-       FROM session_exercises se
-       JOIN exercises e ON e.id = se.exercise_id
-       WHERE se.workout_session_id = $1
-       ORDER BY se.sort_order`,
-      [id]
-    );
-
-    // Compute progression for each completed/partial exercise
-    const details = [];
-    let progressed = 0;
-    let same = 0;
-    let regressed = 0;
-    let skipped = 0;
-
-    for (const ex of exercises) {
-      if (ex.status === 'skipped') {
-        skipped++;
-        details.push({
-          exercise_name: ex.exercise_name,
-          muscle_group: ex.muscle_group,
-          status: 'skipped',
-          skip_reason: ex.skip_reason,
-        });
-        continue;
-      }
-
-      // Get current session sets
-      const { rows: currentSets } = await client.query(
-        'SELECT set_number, weight_lbs, reps FROM set_logs WHERE session_exercise_id = $1 ORDER BY set_number',
-        [ex.id]
-      );
-
-      // Get last session for comparison
-      const lastSession = await fetchLastSession(client, ex.exercise_id, id);
-      const progression = compareProgression(currentSets, lastSession?.sets || []);
-
-      if (progression.status === 'progressed' || progression.status === 'first_time') progressed++;
-      else if (progression.status === 'same') same++;
-      else regressed++;
-
-      details.push({
-        exercise_name: ex.exercise_name,
-        muscle_group: ex.muscle_group,
-        status: progression.status,
-        reason: progression.reason,
-      });
-    }
-
-    // Re-build the full workout data
     const data = await buildWorkoutResponse(pool, id);
+    const completionStats = await buildCompletionStats(client, id);
 
     res.json({
       data: {
         ...data,
-        duration_minutes: durationMinutes,
-        progression: {
-          total_exercises: exercises.length,
-          progressed,
-          same,
-          regressed,
-          skipped,
-          details,
-        },
+        ...completionStats,
       },
     });
   } catch (err) {
