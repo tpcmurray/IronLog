@@ -43,8 +43,14 @@ export default function HomePage() {
 
   const todayDay = program?.days?.find((d) => d.day_of_week === dayOfWeek);
   const isRestDay = todayDay?.is_rest_day;
-  const hasWorkout = currentWorkout != null;
-  const isWorkoutCompleted = currentWorkout?.progression != null;
+
+  // Check if workout is from today
+  const isWorkoutFromToday = currentWorkout
+    ? new Date(currentWorkout.started_at).toDateString() === today.toDateString()
+    : false;
+
+  const hasWorkout = currentWorkout != null && isWorkoutFromToday;
+  const isWorkoutCompleted = currentWorkout?.progression != null && isWorkoutFromToday;
 
   async function handleStart() {
     if (!todayDay) return;
