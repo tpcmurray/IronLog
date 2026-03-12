@@ -244,10 +244,28 @@ async function startWorkout(req, res, next) {
 
     // Check for existing in-progress session
     const { rows: existing } = await client.query(
-      'SELECT id FROM workout_sessions WHERE completed_at IS NULL LIMIT 1'
+      'SELECT id, started_at FROM workout_sessions WHERE completed_at IS NULL LIMIT 1'
     );
+
     if (existing.length > 0) {
-      throw createError(409, 'A workout session is already in progress', 'CONFLICT');
+      const startedDate = new Date(existing[0].started_at).toDateString();
+      const todayDate = new Date().toDateString();
+
+      if (startedDate === todayDate) {
+        throw createError(409, 'A workout session is already in progress', 'CONFLICT');
+      }
+
+      // Stale workout from a previous day — auto-complete it
+      const staleId = existing[0].id;
+      await client.query(
+        `UPDATE session_exercises SET status = 'skipped', completed_at = NOW()
+         WHERE workout_session_id = $1 AND status IN ('pending', 'in_progress')`,
+        [staleId]
+      );
+      await client.query(
+        'UPDATE workout_sessions SET completed_at = NOW() WHERE id = $1',
+        [staleId]
+      );
     }
 
     // Verify program day exists

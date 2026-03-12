@@ -24,10 +24,10 @@ services:
     restart: unless-stopped
     environment:
       NODE_ENV: production
-      PORT: 3001
+      PORT: 3007
       DATABASE_URL: postgres://${POSTGRES_USER:-ironlog}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-ironlog}
     ports:
-      - "3001:3001"
+      - "3007:3007"
     depends_on:
       db:
         condition: service_healthy

@@ -53,10 +53,10 @@ describe('POST /api/workouts', () => {
     expect(mockClient.release).toHaveBeenCalled();
   });
 
-  it('returns 409 when a session is already in progress', async () => {
+  it('returns 409 when a same-day session is already in progress', async () => {
     const mockClient = createMockClient([
       {}, // BEGIN
-      { rows: [{ id: 'existing' }] }, // Found existing session
+      { rows: [{ id: 'existing', started_at: new Date().toISOString() }] }, // Found today's session
     ]);
 
     pool.connect.mockResolvedValue(mockClient);
@@ -67,6 +67,46 @@ describe('POST /api/workouts', () => {
 
     expect(res.status).toBe(409);
     expect(res.body.error.code).toBe('CONFLICT');
+  });
+
+  it('auto-completes stale workout from previous day and creates new session', async () => {
+    const STALE_ID = 'a0000001-0000-0000-0000-000000000099';
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const mockClient = createMockClient([
+      {}, // BEGIN
+      { rows: [{ id: STALE_ID, started_at: yesterday.toISOString() }] }, // Found stale session
+      {}, // UPDATE session_exercises (mark skipped)
+      {}, // UPDATE workout_sessions (set completed_at)
+      { rows: [{ id: DAY_ID, is_rest_day: false }] }, // Verify day
+      { rows: [{ id: WID }] }, // INSERT workout_sessions
+      { rows: [{ id: 'pe-1', exercise_id: 'ex-1', sort_order: 1 }] }, // SELECT program_exercises
+      {}, // INSERT session_exercise
+      {}, // COMMIT
+      // buildWorkoutResponse:
+      { rows: [{ id: WID, program_day_id: DAY_ID, started_at: new Date().toISOString(), completed_at: null, notes: null }] },
+      { rows: [] }, // exercises
+    ]);
+
+    pool.connect.mockResolvedValue(mockClient);
+
+    const res = await request(app)
+      .post('/api/workouts')
+      .send({ program_day_id: DAY_ID });
+
+    expect(res.status).toBe(201);
+    expect(res.body.data.id).toBe(WID);
+
+    // Verify the stale workout exercises were marked skipped
+    const skipCall = mockClient.query.mock.calls[2];
+    expect(skipCall[0]).toMatch(/UPDATE session_exercises/);
+    expect(skipCall[1]).toEqual([STALE_ID]);
+
+    // Verify the stale workout was completed
+    const completeCall = mockClient.query.mock.calls[3];
+    expect(completeCall[0]).toMatch(/UPDATE workout_sessions/);
+    expect(completeCall[1]).toEqual([STALE_ID]);
   });
 
   it('returns 404 for non-existent program day', async () => {

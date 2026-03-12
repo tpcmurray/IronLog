@@ -92,7 +92,7 @@ if (-not $ready) {
 Write-Host 'Postgres is ready.' -ForegroundColor Green
 
 # --- Start API server ---
-Write-Host 'Starting API server on port 3001...' -ForegroundColor Cyan
+Write-Host 'Starting API server on port 3007...' -ForegroundColor Cyan
 $apiJob = Start-Process -FilePath 'node' -ArgumentList 'src/index.js' -WorkingDirectory $serverDir -PassThru -NoNewWindow
 
 # Give the API a moment to run migrations and start
@@ -105,14 +105,14 @@ $viteJob = Start-Process -FilePath 'cmd' -ArgumentList '/c npx vite --host' -Wor
 Start-Sleep -Seconds 2
 
 # --- Open Chrome ---
-Write-Host 'Opening Chrome at http://localhost:5173 ...' -ForegroundColor Green
-Start-Process 'http://localhost:5173'
+Write-Host 'Opening Chrome at http://localhost:5179 ...' -ForegroundColor Green
+Start-Process 'http://localhost:5179'
 
 # --- Wait for Ctrl+C, then clean up ---
 Write-Host ''
 Write-Host '=== IronLog is running ===' -ForegroundColor Green
-Write-Host '  Client:  http://localhost:5173' -ForegroundColor White
-Write-Host '  API:     http://localhost:3001' -ForegroundColor White
+Write-Host '  Client:  http://localhost:5179' -ForegroundColor White
+Write-Host '  API:     http://localhost:3007' -ForegroundColor White
 Write-Host '  DB:      localhost:5432' -ForegroundColor White
 Write-Host ''
 Write-Host 'Press Ctrl+C to stop all services.' -ForegroundColor Yellow
