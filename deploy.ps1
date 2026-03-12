@@ -32,7 +32,7 @@ sed -i 's/npm ci --omit=dev/npm install --omit=dev/' $APP_DIR/server/Dockerfile
 sed -i 's/npm ci/npm install/' $APP_DIR/client.Dockerfile
 echo "Rebuilding containers..."
 cd $APP_DIR
-docker compose up -d --build
+sudo /usr/local/bin/docker compose up -d --build
 echo "Cleaning up..."
 rm -rf /tmp/IronLog-main /tmp/ironlog.tar.gz /tmp/docker-compose.yml.bak
 echo "Deploy complete!"
