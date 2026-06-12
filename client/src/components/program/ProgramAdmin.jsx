@@ -148,7 +148,7 @@ export default function ProgramAdmin() {
   if (loading) {
     return (
       <div className="px-5 pt-10">
-        <h1 className="text-[22px] font-bold text-white">Program</h1>
+        <h1 className="text-[28px] font-bold text-white">Program</h1>
         <p className="text-text-secondary text-sm mt-4">Loading...</p>
       </div>
     );
@@ -157,7 +157,7 @@ export default function ProgramAdmin() {
   if (error && !program) {
     return (
       <div className="px-5 pt-10">
-        <h1 className="text-[22px] font-bold text-white">Program</h1>
+        <h1 className="text-[28px] font-bold text-white">Program</h1>
         <p className="text-red-400 text-sm mt-4">{error}</p>
       </div>
     );
@@ -168,20 +168,20 @@ export default function ProgramAdmin() {
   return (
     <div className="px-5 pt-10 pb-6">
       {/* Header */}
-      <h1 className="text-[22px] font-bold text-white mb-0.5">Program</h1>
-      <p className="text-text-muted text-[13px] mb-4">{program.name}</p>
+      <h1 className="text-[28px] font-bold text-white mb-0.5">Program</h1>
+      <p className="text-text-muted text-sm mb-4">{program.name}</p>
 
       {/* Exercise Library button */}
       <button
         onClick={() => setModal({ type: 'library' })}
-        className="w-full text-center py-3 text-accent text-sm font-medium bg-transparent border border-accent rounded-xl mb-6 cursor-pointer"
+        className="w-full text-center py-3 text-accent-bright text-base font-medium bg-transparent border border-accent rounded-xl mb-6 cursor-pointer"
       >
         Exercise Library
       </button>
 
       {/* Error banner */}
       {error && (
-        <p className="text-red-400 text-xs mb-3">{error}</p>
+        <p className="text-red-400 text-sm mb-3">{error}</p>
       )}
 
       {/* Day editors */}
@@ -263,14 +263,14 @@ function ExercisePicker({ exercises, onSelect, onClose }) {
           const colors = MUSCLE_GROUP_COLORS[mg] || { bg: 'bg-gray-700', text: 'text-gray-300' };
           return (
             <div key={mg} className="mb-3">
-              <span className={`${colors.bg} ${colors.text} px-1.5 py-0.5 rounded text-[10px] font-medium`}>
+              <span className={`${colors.bg} ${colors.text} px-1.5 py-0.5 rounded text-xs font-medium`}>
                 {mg}
               </span>
               {exList.map((ex) => (
                 <button
                   key={ex.id}
                   onClick={() => onSelect(ex.id)}
-                  className="block w-full text-left text-text-primary text-sm py-2 px-2 bg-transparent border-none cursor-pointer hover:bg-[#1a1a30] rounded"
+                  className="block w-full text-left text-text-primary text-base py-2.5 px-2 bg-transparent border-none cursor-pointer hover:bg-bg-card-alt rounded"
                 >
                   {ex.name}
                 </button>
@@ -306,20 +306,20 @@ function SlotConfigModal({ exercise, onSave, onClose }) {
         <h3 className="text-text-primary text-lg font-semibold mb-1">
           Configure {exercise.exercise_name}
         </h3>
-        <p className="text-text-muted text-[13px] mb-4">Adjust sets, rest, and superset settings.</p>
+        <p className="text-text-muted text-sm mb-4">Adjust sets, rest, and superset settings.</p>
 
         <form onSubmit={handleSubmit}>
-          <label className="text-text-secondary text-xs block mb-1">Target Sets</label>
+          <label className="text-text-secondary text-sm block mb-1">Target Sets</label>
           <input
             type="number"
             inputMode="numeric"
             value={targetSets}
             onChange={(e) => setTargetSets(e.target.value)}
-            className="w-full bg-[#1a1a30] border border-border-light rounded-lg px-3 py-2 text-white text-sm mb-3 focus:border-accent focus:outline-none"
+            className="w-full bg-bg-card-alt border border-border-light rounded-lg px-3 py-2.5 text-white text-base mb-3 focus:border-accent focus:outline-none"
             min="1"
           />
 
-          <label className="text-text-secondary text-xs block mb-1">
+          <label className="text-text-secondary text-sm block mb-1">
             Rest Override (seconds)
             <span className="text-text-muted ml-1">
               — default: {formatTime(exercise.rest_seconds)}
@@ -331,7 +331,7 @@ function SlotConfigModal({ exercise, onSave, onClose }) {
             value={restSeconds}
             onChange={(e) => setRestSeconds(e.target.value)}
             placeholder="Use default"
-            className="w-full bg-[#1a1a30] border border-border-light rounded-lg px-3 py-2 text-white text-sm mb-3 focus:border-accent focus:outline-none"
+            className="w-full bg-bg-card-alt border border-border-light rounded-lg px-3 py-2.5 text-white text-base mb-3 focus:border-accent focus:outline-none"
             min="0"
           />
 
@@ -354,7 +354,7 @@ function SlotConfigModal({ exercise, onSave, onClose }) {
           <button
             type="button"
             onClick={onClose}
-            className="w-full bg-transparent text-text-secondary font-medium text-[13px] py-2 border-none cursor-pointer"
+            className="w-full bg-transparent text-text-secondary font-medium text-sm py-2 min-h-[44px] border-none cursor-pointer"
           >
             Cancel
           </button>

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getCurrentWorkout, completeWorkout as apiCompleteWorkout } from '../api/workouts';
+import { getCurrentWorkout, completeWorkout as apiCompleteWorkout, getRepRecords } from '../api/workouts';
 import useWorkout from '../hooks/useWorkout';
 import useTimer from '../hooks/useTimer';
 import useVibrate from '../hooks/useVibrate';
@@ -88,6 +88,27 @@ function WorkoutContent({ workout }) {
   useWakeLock(!completionResult);
 
   const isLastExercise = currentIndex >= totalExercises - 1;
+
+  // Fetch rep records (today's total vs best past day at same weight)
+  // whenever the current exercise reaches a completed state
+  const [repRecords, setRepRecords] = useState(null);
+  const currentExerciseComplete =
+    currentExercise?.status === 'completed' || currentExercise?.status === 'partial';
+
+  useEffect(() => {
+    if (!currentExerciseComplete) return;
+    let cancelled = false;
+    getRepRecords(workout.id)
+      .then((records) => {
+        if (!cancelled) setRepRecords(records);
+      })
+      .catch(() => {
+        // Non-critical — just omit the record display
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [currentExerciseComplete, currentExercise?.exercise_id, workout.id]);
 
   // Complete the entire workout via API
   const finishWorkout = useCallback(async () => {
@@ -260,6 +281,7 @@ function WorkoutContent({ workout }) {
         prevExerciseName={prevExerciseName}
         isLastExercise={isLastExercise}
         nextExercise={nextExercise}
+        repRecord={repRecords?.[currentExercise.exercise_id]}
       />
 
       {showSkipModal && (

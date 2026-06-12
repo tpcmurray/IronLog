@@ -53,6 +53,52 @@ async function fetchLastSession(client, exerciseId, excludeSessionId) {
 }
 
 /**
+ * Pick the "current" weight from a list of sets: the most-used weight,
+ * tie-broken by the weight of the latest set. Returns null for empty input.
+ */
+function pickCurrentWeight(sets) {
+  if (!sets || sets.length === 0) return null;
+
+  const counts = new Map();
+  for (const s of sets) {
+    const w = parseFloat(s.weight_lbs);
+    counts.set(w, (counts.get(w) || 0) + 1);
+  }
+  const maxCount = Math.max(...counts.values());
+
+  // Walk backwards so the latest set wins ties
+  for (let i = sets.length - 1; i >= 0; i--) {
+    const w = parseFloat(sets[i].weight_lbs);
+    if (counts.get(w) === maxCount) return w;
+  }
+  return null;
+}
+
+/**
+ * Find the best past day for an exercise at a given weight: the day with the
+ * highest total reps summed across sets logged at exactly that weight.
+ * Returns { date, total_reps } or null if no prior sets at that weight.
+ */
+async function fetchRepRecord(client, exerciseId, weightLbs, excludeSessionId) {
+  const { rows } = await client.query(
+    `SELECT ws.started_at::date AS date, SUM(sl.reps)::int AS total_reps
+     FROM session_exercises se
+     JOIN workout_sessions ws ON ws.id = se.workout_session_id
+     JOIN set_logs sl ON sl.session_exercise_id = se.id
+     WHERE se.exercise_id = $1
+       AND se.workout_session_id != $2
+       AND sl.weight_lbs = $3
+     GROUP BY ws.started_at::date
+     ORDER BY total_reps DESC, date DESC
+     LIMIT 1`,
+    [exerciseId, excludeSessionId, weightLbs]
+  );
+
+  if (rows.length === 0) return null;
+  return { date: rows[0].date, total_reps: rows[0].total_reps };
+}
+
+/**
  * Build the full nested workout response with last_session data.
  */
 async function buildWorkoutResponse(client, workoutId) {
@@ -347,6 +393,7 @@ async function buildCompletionStats(client, workoutId) {
     if (ex.status === 'skipped') {
       skipped++;
       details.push({
+        exercise_id: ex.exercise_id,
         exercise_name: ex.exercise_name,
         muscle_group: ex.muscle_group,
         status: 'skipped',
@@ -370,6 +417,7 @@ async function buildCompletionStats(client, workoutId) {
     else regressed++;
 
     details.push({
+      exercise_id: ex.exercise_id,
       exercise_name: ex.exercise_name,
       muscle_group: ex.muscle_group,
       status: progression.status,
@@ -645,6 +693,56 @@ async function completeExercise(req, res, next) {
   }
 }
 
+async function getRepRecords(req, res, next) {
+  try {
+    const { id } = req.params;
+
+    const { rows: workout } = await pool.query(
+      'SELECT id FROM workout_sessions WHERE id = $1',
+      [id]
+    );
+    if (workout.length === 0) {
+      throw createError(404, 'Workout not found', 'NOT_FOUND');
+    }
+
+    // All logged sets in this workout, grouped per exercise
+    const { rows: setRows } = await pool.query(
+      `SELECT se.exercise_id, sl.weight_lbs, sl.reps
+       FROM session_exercises se
+       JOIN set_logs sl ON sl.session_exercise_id = se.id
+       WHERE se.workout_session_id = $1
+       ORDER BY se.exercise_id, sl.set_number`,
+      [id]
+    );
+
+    const setsByExercise = new Map();
+    for (const row of setRows) {
+      if (!setsByExercise.has(row.exercise_id)) setsByExercise.set(row.exercise_id, []);
+      setsByExercise.get(row.exercise_id).push(row);
+    }
+
+    const records = {};
+    for (const [exerciseId, sets] of setsByExercise) {
+      const weight = pickCurrentWeight(sets);
+      const todayTotal = sets
+        .filter((s) => parseFloat(s.weight_lbs) === weight)
+        .reduce((sum, s) => sum + s.reps, 0);
+      const best = await fetchRepRecord(pool, exerciseId, weight, id);
+
+      records[exerciseId] = {
+        weight_lbs: weight,
+        today_total_reps: todayTotal,
+        best_total_reps: best ? best.total_reps : null,
+        best_date: best ? best.date : null,
+      };
+    }
+
+    res.json({ data: records });
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function getWorkoutHistory(req, res, next) {
   try {
     const { week, date } = req.query;
@@ -744,7 +842,7 @@ async function getWorkoutHistory(req, res, next) {
 module.exports = {
   startWorkout, getCurrentWorkout, completeWorkout,
   startExercise, skipExercise, completeExercise,
-  getWorkoutHistory,
-  fetchLastSession, compareProgression,
+  getWorkoutHistory, getRepRecords,
+  fetchLastSession, compareProgression, pickCurrentWeight,
   getWeekBounds, isoWeekToDate,
 };

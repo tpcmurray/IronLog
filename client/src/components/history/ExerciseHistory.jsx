@@ -65,19 +65,19 @@ export default function ExerciseHistory({ exerciseId }) {
   return (
     <div className="px-5 mt-4">
       {/* Exercise header */}
-      <h2 className="text-[22px] font-bold text-white mb-1">{exercise.name}</h2>
+      <h2 className="text-2xl font-bold text-white mb-1">{exercise.name}</h2>
       <div className="flex items-center gap-2 mb-6">
         <span className={`${colors.bg} ${colors.text} px-2 py-1 rounded text-xs font-medium`}>
           {exercise.muscle_group}
         </span>
         {restLabel && (
-          <span className="text-text-muted text-xs">Rest: {restLabel}</span>
+          <span className="text-text-muted text-sm">Rest: {restLabel}</span>
         )}
       </div>
 
       {/* v2 chart placeholder */}
-      <div className="bg-[#1a1a30] border border-dashed border-border rounded-xl p-6 text-center mb-4">
-        <span className="text-text-muted text-xs">Progression chart (v2)</span>
+      <div className="bg-bg-card-alt border border-dashed border-border rounded-xl p-6 text-center mb-4">
+        <span className="text-text-muted text-sm">Progression chart (v2)</span>
       </div>
 
       {/* Session list */}
@@ -94,7 +94,7 @@ export default function ExerciseHistory({ exerciseId }) {
         <button
           onClick={loadMore}
           disabled={loadingMore}
-          className="w-full text-center py-3 text-accent text-sm font-medium bg-transparent border border-accent rounded-xl mt-2 mb-4 cursor-pointer disabled:opacity-50"
+          className="w-full text-center py-3 text-accent-bright text-base font-medium bg-transparent border border-accent rounded-xl mt-2 mb-4 cursor-pointer disabled:opacity-50"
         >
           {loadingMore ? 'Loading...' : `Load more (${total - offset} remaining)`}
         </button>
@@ -112,15 +112,15 @@ function SessionCard({ session, prescribedRest }) {
   const extendedSets = session.sets.filter((s) => isRestExtended(s, prescribedRest));
 
   return (
-    <div className="bg-[#1a1a30] rounded-xl p-4 mb-3">
+    <div className="bg-bg-card-alt border border-border rounded-xl p-4 mb-3">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-text-primary text-sm font-semibold">
+        <span className="text-text-primary text-base font-semibold">
           {formatSessionDate(session.date)}
         </span>
         <ProgressBadge status={session.progression_status} />
       </div>
 
-      <div className="font-mono text-xs text-text-secondary">
+      <div className="font-mono text-sm text-text-secondary">
         {session.sets.map((s) => {
           const extended = isRestExtended(s, prescribedRest);
           return (
@@ -139,7 +139,7 @@ function SessionCard({ session, prescribedRest }) {
       </div>
 
       {extendedSets.length > 0 && (
-        <div className="text-[11px] mt-1.5" style={{ color: '#92400e' }}>
+        <div className="text-xs text-warning-text mt-1.5">
           {extendedSets.map((s) => (
             <div key={s.set_number}>
               ⚠ Set {s.set_number} had extended rest ({formatTime(s.rest_duration_seconds)} vs {formatTime(prescribedRest)} prescribed)

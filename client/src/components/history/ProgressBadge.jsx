@@ -10,5 +10,5 @@ export default function ProgressBadge({ status }) {
   const cfg = CONFIG[status];
   if (!cfg) return null;
 
-  return <span className={`text-xs ${cfg.className}`}>{cfg.text}</span>;
+  return <span className={`text-sm ${cfg.className}`}>{cfg.text}</span>;
 }

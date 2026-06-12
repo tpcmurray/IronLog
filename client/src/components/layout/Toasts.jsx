@@ -13,12 +13,12 @@ export default function Toasts() {
       {toasts.map((t) => (
         <div
           key={t.id}
-          className={`pointer-events-auto rounded-xl px-4 py-3 text-sm font-medium shadow-lg flex items-center justify-between ${
+          className={`pointer-events-auto rounded-xl px-4 py-3 text-base font-medium shadow-lg flex items-center justify-between ${
             t.type === 'error'
-              ? 'bg-[#dc2626] text-white'
+              ? 'bg-danger text-white'
               : t.type === 'success'
-                ? 'bg-[#166534] text-white'
-                : 'bg-[#92400e] text-white'
+                ? 'bg-success-border text-white'
+                : 'bg-warning-deep text-white'
           }`}
         >
           <span>{t.message}</span>

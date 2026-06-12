@@ -31,14 +31,14 @@ export default function SetInput({ setNumber, targetSets, prefill, onLogSet }) {
   }
 
   return (
-    <div className="bg-[#1e1e3a] border border-accent rounded-lg p-4 mb-4">
-      <div className="text-accent text-[11px] font-semibold mb-3">
+    <div className="bg-bg-input border border-accent rounded-lg p-4 mb-4">
+      <div className="text-accent-bright text-xs font-semibold tracking-wider mb-3">
         SET {setNumber} of {targetSets} &mdash; NOW
       </div>
 
       <div className="grid grid-cols-2 gap-3 mb-4">
         <div>
-          <label className="text-text-secondary text-[11px] block mb-1">Weight (lbs)</label>
+          <label className="text-text-secondary text-sm block mb-1">Weight (lbs)</label>
           <input
             type="number"
             inputMode="decimal"
@@ -48,7 +48,7 @@ export default function SetInput({ setNumber, targetSets, prefill, onLogSet }) {
           />
         </div>
         <div>
-          <label className="text-text-secondary text-[11px] block mb-1">Reps</label>
+          <label className="text-text-secondary text-sm block mb-1">Reps</label>
           <input
             type="number"
             inputMode="numeric"

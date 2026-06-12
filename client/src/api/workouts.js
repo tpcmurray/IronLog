@@ -20,6 +20,10 @@ export function getWorkoutHistory({ week, date } = {}) {
   return get(`/workouts/history${qs ? `?${qs}` : ''}`);
 }
 
+export function getRepRecords(workoutId) {
+  return get(`/workouts/${workoutId}/rep-records`);
+}
+
 export function startExercise(workoutId, sessionExerciseId) {
   return put(`/workouts/${workoutId}/exercises/${sessionExerciseId}/start`);
 }

@@ -2,7 +2,7 @@ const { Router } = require('express');
 const {
   startWorkout, getCurrentWorkout, completeWorkout,
   startExercise, skipExercise, completeExercise,
-  getWorkoutHistory,
+  getWorkoutHistory, getRepRecords,
 } = require('../controllers/workoutController');
 const { logSet } = require('../controllers/setController');
 const { requireFields, validateUuid } = require('../middleware/validate');
@@ -17,6 +17,11 @@ router.post('/',
 router.get('/current', getCurrentWorkout);
 
 router.get('/history', getWorkoutHistory);
+
+router.get('/:id/rep-records',
+  validateUuid('id'),
+  getRepRecords
+);
 
 router.put('/:id/complete',
   validateUuid('id'),

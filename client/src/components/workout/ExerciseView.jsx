@@ -5,6 +5,7 @@ import SetInput from './SetInput';
 import RestTimer from './RestTimer';
 import SupersetBanner from './SupersetBanner';
 import NextExercisePreview from './NextExercisePreview';
+import RepRecordSummary from './RepRecordSummary';
 
 export default function ExerciseView({
   exercise,
@@ -23,6 +24,7 @@ export default function ExerciseView({
   prevExerciseName,
   isLastExercise,
   nextExercise,
+  repRecord,
 }) {
   const isComplete =
     exercise.status === 'completed' || exercise.status === 'partial';
@@ -32,25 +34,25 @@ export default function ExerciseView({
     <div className="p-5 pt-10">
       {/* Header */}
       <div className="flex items-center justify-between mb-1">
-        <div className="text-text-muted text-xs">
+        <div className="text-text-muted text-sm">
           Exercise {exerciseIndex + 1} of {totalExercises}
         </div>
         {!isComplete && (
           <button
             onClick={onSkip}
-            className="bg-transparent text-progress-down border border-[#5f1e1e] rounded-lg px-4 min-h-[44px] text-[13px]"
+            className="bg-transparent text-progress-down border border-danger-border rounded-lg px-4 min-h-[44px] text-sm"
           >
             Skip
           </button>
         )}
       </div>
       <div className="flex items-center gap-3 mb-1">
-        <h2 className="text-white text-[22px] font-bold">{exercise.exercise_name}</h2>
+        <h2 className="text-white text-2xl font-bold">{exercise.exercise_name}</h2>
       </div>
       <div className="flex items-center gap-2 mb-5">
         <MuscleGroupBadge group={exercise.muscle_group} />
         {isComplete && (
-          <span className="text-progress-up text-[13px] font-medium">&#10003; Complete</span>
+          <span className="text-progress-up text-sm font-medium">&#10003; Complete</span>
         )}
       </div>
 
@@ -101,6 +103,7 @@ export default function ExerciseView({
       {/* Exercise completion actions */}
       {isComplete && (
         <div className="mt-8">
+          <RepRecordSummary record={repRecord} />
           <button
             onClick={onNextExercise}
             className="w-full rounded-xl py-4 text-lg font-semibold text-white bg-accent mb-3"
@@ -109,7 +112,7 @@ export default function ExerciseView({
           </button>
           <button
             onClick={onAddExtraSet}
-            className="w-full rounded-xl py-3 text-sm font-medium text-accent border border-accent bg-transparent"
+            className="w-full rounded-xl py-3 text-base font-medium text-accent-bright border border-accent bg-transparent"
           >
             + Add Extra Set
           </button>
@@ -125,7 +128,7 @@ export default function ExerciseView({
       {exerciseIndex > 0 && !showTimer && (
         <button
           onClick={onPrev}
-          className="w-full mt-4 bg-transparent text-text-secondary font-medium text-[13px] min-h-[44px]"
+          className="w-full mt-4 bg-transparent text-text-secondary font-medium text-sm min-h-[44px]"
         >
           &larr; Previous Exercise
         </button>

@@ -263,6 +263,96 @@ describe('GET /api/workouts/history', () => {
   });
 });
 
+describe('GET /api/workouts/:id/rep-records', () => {
+  const EX1 = 'b0000001-0000-0000-0000-000000000001';
+  const EX2 = 'b0000001-0000-0000-0000-000000000002';
+
+  it('returns today total and historical best per exercise', async () => {
+    // Workout exists
+    pool.query.mockResolvedValueOnce({ rows: [{ id: WID }] });
+    // Sets logged in this workout (two exercises)
+    pool.query.mockResolvedValueOnce({
+      rows: [
+        { exercise_id: EX1, weight_lbs: '77.0', reps: 6 },
+        { exercise_id: EX1, weight_lbs: '77.0', reps: 7 },
+        { exercise_id: EX1, weight_lbs: '77.0', reps: 5 },
+        { exercise_id: EX2, weight_lbs: '35.0', reps: 13 },
+        { exercise_id: EX2, weight_lbs: '35.0', reps: 11 },
+      ],
+    });
+    // Historical best for EX1 at 77 lbs
+    pool.query.mockResolvedValueOnce({
+      rows: [{ date: '2026-05-14', total_reps: 21 }],
+    });
+    // Historical best for EX2 at 35 lbs — none
+    pool.query.mockResolvedValueOnce({ rows: [] });
+
+    const res = await request(app).get(`/api/workouts/${WID}/rep-records`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.data[EX1]).toEqual({
+      weight_lbs: 77,
+      today_total_reps: 18,
+      best_total_reps: 21,
+      best_date: '2026-05-14',
+    });
+    expect(res.body.data[EX2]).toEqual({
+      weight_lbs: 35,
+      today_total_reps: 24,
+      best_total_reps: null,
+      best_date: null,
+    });
+
+    // Best query is scoped to exercise + weight, excluding this session
+    const bestCall = pool.query.mock.calls[2];
+    expect(bestCall[0]).toMatch(/SUM\(sl\.reps\)/);
+    expect(bestCall[1]).toEqual([EX1, WID, 77]);
+  });
+
+  it('counts only sets at the current (most-used) weight', async () => {
+    pool.query.mockResolvedValueOnce({ rows: [{ id: WID }] });
+    // Mixed weights: 80 used twice, 75 once → current weight 80
+    pool.query.mockResolvedValueOnce({
+      rows: [
+        { exercise_id: EX1, weight_lbs: '75.0', reps: 10 },
+        { exercise_id: EX1, weight_lbs: '80.0', reps: 8 },
+        { exercise_id: EX1, weight_lbs: '80.0', reps: 7 },
+      ],
+    });
+    pool.query.mockResolvedValueOnce({ rows: [] });
+
+    const res = await request(app).get(`/api/workouts/${WID}/rep-records`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.data[EX1].weight_lbs).toBe(80);
+    expect(res.body.data[EX1].today_total_reps).toBe(15); // 8 + 7, excludes the 75 lb set
+  });
+
+  it('returns empty object when no sets are logged', async () => {
+    pool.query.mockResolvedValueOnce({ rows: [{ id: WID }] });
+    pool.query.mockResolvedValueOnce({ rows: [] });
+
+    const res = await request(app).get(`/api/workouts/${WID}/rep-records`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.data).toEqual({});
+  });
+
+  it('returns 404 when workout not found', async () => {
+    pool.query.mockResolvedValueOnce({ rows: [] });
+
+    const res = await request(app).get(`/api/workouts/${WID}/rep-records`);
+
+    expect(res.status).toBe(404);
+    expect(res.body.error.code).toBe('NOT_FOUND');
+  });
+
+  it('returns 400 for invalid uuid', async () => {
+    const res = await request(app).get('/api/workouts/not-a-uuid/rep-records');
+    expect(res.status).toBe(400);
+  });
+});
+
 describe('PUT /api/workouts/:workoutId/exercises/:sessionExerciseId/start', () => {
   it('starts an exercise', async () => {
     pool.query.mockResolvedValueOnce({ rows: [{ id: SEID, status: 'pending' }] });

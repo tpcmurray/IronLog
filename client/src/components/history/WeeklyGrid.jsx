@@ -123,7 +123,7 @@ export default function WeeklyGrid() {
   if (loading && !data) {
     return (
       <div className="px-5 pt-10">
-        <h1 className="text-[22px] font-bold text-white mb-4">History</h1>
+        <h1 className="text-[28px] font-bold text-white mb-4">History</h1>
         <p className="text-text-secondary text-sm">Loading...</p>
       </div>
     );
@@ -132,7 +132,7 @@ export default function WeeklyGrid() {
   if (error && !data) {
     return (
       <div className="px-5 pt-10">
-        <h1 className="text-[22px] font-bold text-white mb-4">History</h1>
+        <h1 className="text-[28px] font-bold text-white mb-4">History</h1>
         <p className="text-red-400 text-sm">{error}</p>
       </div>
     );
@@ -148,19 +148,19 @@ export default function WeeklyGrid() {
       <div className="flex items-center justify-between mb-4">
         <button
           onClick={goPrev}
-          className="text-accent text-2xl bg-transparent border-none cursor-pointer p-2"
+          className="text-accent-bright text-2xl bg-transparent border-none cursor-pointer p-2"
           disabled={loading}
         >
           &larr;
         </button>
         <div className="text-center">
-          <h1 className="text-base font-semibold text-text-primary">
+          <h1 className="text-lg font-semibold text-text-primary">
             Week of {formatWeekHeader(data?.week_start)}
           </h1>
         </div>
         <button
           onClick={goNext}
-          className={`text-2xl bg-transparent border-none p-2 ${atCurrentWeek ? 'text-text-muted cursor-default' : 'text-accent cursor-pointer'}`}
+          className={`text-2xl bg-transparent border-none p-2 ${atCurrentWeek ? 'text-text-muted cursor-default' : 'text-accent-bright cursor-pointer'}`}
           disabled={atCurrentWeek || loading}
         >
           &rarr;
@@ -173,19 +173,19 @@ export default function WeeklyGrid() {
         </div>
       ) : (
         <>
-          <div className="text-text-muted text-[11px] text-center mb-3">
+          <div className="text-text-muted text-xs text-center mb-3">
             &larr; swipe to see all days &rarr;
           </div>
 
           <div className="overflow-x-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
-            <table className="font-mono text-[11px]" style={{ minWidth: 700, width: '100%', borderCollapse: 'collapse' }}>
+            <table className="font-mono text-xs" style={{ minWidth: 760, width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr>
                   <th className="text-left p-2 border-b border-border" style={{ width: 70 }} />
                   {DAY_LABELS.map((label, i) => (
-                    <th key={i} className="p-2 border-b border-border text-accent font-semibold" style={{ minWidth: 100 }}>
+                    <th key={i} className="p-2 border-b border-border text-accent-bright font-semibold" style={{ minWidth: 105 }}>
                       <div>{label}</div>
-                      <div className="font-normal text-text-muted text-[10px]">{dayDates[i]}</div>
+                      <div className="font-normal text-text-muted text-xs">{dayDates[i]}</div>
                     </th>
                   ))}
                 </tr>
@@ -193,11 +193,11 @@ export default function WeeklyGrid() {
               <tbody>
                 {orderedGroups.map((mg) => (
                   <tr key={mg}>
-                    <td className="p-2 border-b border-[#1a1a30] align-top">
+                    <td className="p-2 border-b border-border align-top">
                       <MuscleGroupBadge group={mg} />
                     </td>
                     {DAY_LABELS.map((_, dayIdx) => (
-                      <td key={dayIdx} className="p-2 border-b border-[#1a1a30] align-top text-text-secondary">
+                      <td key={dayIdx} className="p-2 border-b border-border align-top text-text-secondary">
                         <CellContent
                           exercises={grid[mg]?.[dayIdx]}
                           onTapExercise={(id) => navigate(`/history/exercise/${id}`)}
@@ -230,9 +230,9 @@ function CellContent({ exercises, onTapExercise }) {
   }
 
   return exercises.map((ex, i) => (
-    <div key={i} className={ex.status === 'skipped' ? 'opacity-35 line-through' : ''}>
+    <div key={i} className={ex.status === 'skipped' ? 'opacity-60 line-through' : ''}>
       <div
-        className="font-semibold text-[#c0c0d8] mb-0.5 cursor-pointer"
+        className="font-semibold text-text-primary mb-0.5 cursor-pointer"
         onClick={() => onTapExercise(ex.exerciseId)}
       >
         {ex.exerciseName}
@@ -241,7 +241,7 @@ function CellContent({ exercises, onTapExercise }) {
         <div key={j}>{compactSet(s)}</div>
       ))}
       {ex.status === 'skipped' && (
-        <div className="text-text-muted text-[10px] italic">skipped</div>
+        <div className="text-text-muted text-xs italic">skipped</div>
       )}
     </div>
   ));

@@ -95,7 +95,7 @@ export default function HomePage() {
     <div className="p-6 pt-14">
       {/* Date header */}
       <div className="text-center mb-8">
-        <div className="text-text-muted text-[13px] tracking-widest uppercase">
+        <div className="text-text-muted text-sm font-medium tracking-widest uppercase">
           {DAY_LABELS[dayOfWeek]}
         </div>
         <div className="text-text-primary text-[28px] font-bold mt-1">
@@ -112,7 +112,7 @@ export default function HomePage() {
           <WorkoutPreview exercises={currentWorkout.exercises} inProgress />
           <button
             onClick={handleResume}
-            className="w-full rounded-xl py-4 px-8 text-lg font-semibold text-white bg-[#d97706] mb-4"
+            className="w-full rounded-xl py-4 px-8 text-lg font-semibold text-white bg-warning mb-4"
           >
             Resume Workout
           </button>

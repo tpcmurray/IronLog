@@ -5,13 +5,29 @@
   --color-bg-primary: #1a1a2e;
   --color-bg-secondary: #0f0f1a;
   --color-bg-card: #1e1e36;
+  --color-bg-card-alt: #1a1a30;
+  --color-bg-input: #1e1e3a;
   --color-bg-nav: #12122a;
   --color-border: #2a2a4a;
   --color-border-light: #3a3a5c;
-  --color-text-primary: #e0e0e0;
-  --color-text-secondary: #8888aa;
-  --color-text-muted: #555580;
+  --color-text-primary: #f2f2f7;
+  --color-text-secondary: #bdbdda;
+  --color-text-muted: #9696bc;
   --color-accent: #6366f1;
+  --color-accent-bright: #818cf8;
+
+  /* Semantic state colors */
+  --color-danger: #dc2626;
+  --color-danger-border: #5f1e1e;
+  --color-danger-text: #f87171;
+  --color-warning: #d97706;
+  --color-warning-deep: #92400e;
+  --color-warning-text: #fbbf24;
+  --color-success-bg: #0d2818;
+  --color-success-border: #166534;
+  --color-superset-bg: #2e1065;
+  --color-superset-border: #7c3aed;
+  --color-superset-text: #a78bfa;
 
   /* Muscle group badge colors */
   --color-badge-lats-bg: #1e3a5f;

@@ -103,19 +103,19 @@ export default function ExerciseLibrary({ onClose, onExercisesChanged }) {
                       className="flex items-center justify-between py-2 border-b border-border/50 last:border-b-0"
                     >
                       <div className="min-w-0">
-                        <div className="text-text-primary text-sm truncate">{ex.name}</div>
+                        <div className="text-text-primary text-base truncate">{ex.name}</div>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <span className={`${colors.bg} ${colors.text} px-1.5 py-0.5 rounded text-[10px]`}>
+                          <span className={`${colors.bg} ${colors.text} px-1.5 py-0.5 rounded text-xs`}>
                             {ex.muscle_group}
                           </span>
-                          <span className="text-text-muted text-[10px]">
+                          <span className="text-text-muted text-xs">
                             {formatTime(ex.default_rest_seconds)}
                           </span>
                         </div>
                       </div>
                       <button
                         onClick={() => setEditing(ex)}
-                        className="text-accent text-xs bg-transparent border-none cursor-pointer shrink-0 ml-2"
+                        className="text-accent-bright text-sm bg-transparent border-none cursor-pointer shrink-0 ml-2 min-w-[44px] min-h-[44px]"
                       >
                         Edit
                       </button>
@@ -125,7 +125,7 @@ export default function ExerciseLibrary({ onClose, onExercisesChanged }) {
 
                 <button
                   onClick={() => setEditing({ name: '', muscle_group: 'lats', default_rest_seconds: 120, notes: '' })}
-                  className="w-full text-center py-3 text-accent text-sm font-medium bg-transparent border border-accent rounded-xl mt-4 cursor-pointer"
+                  className="w-full text-center py-3 text-accent-bright text-base font-medium bg-transparent border border-accent rounded-xl mt-4 cursor-pointer"
                 >
                   + Create New Exercise
                 </button>
@@ -166,42 +166,42 @@ function ExerciseForm({ exercise, saving, error, onSave, onCancel }) {
 
       {error && <p className="text-red-400 text-xs mb-2">{error}</p>}
 
-      <label className="text-text-secondary text-xs block mb-1">Name</label>
+      <label className="text-text-secondary text-sm block mb-1">Name</label>
       <input
         type="text"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        className="w-full bg-[#1a1a30] border border-border-light rounded-lg px-3 py-2 text-white text-sm mb-3 focus:border-accent focus:outline-none"
+        className="w-full bg-bg-card-alt border border-border-light rounded-lg px-3 py-2.5 text-white text-base mb-3 focus:border-accent focus:outline-none"
         required
       />
 
-      <label className="text-text-secondary text-xs block mb-1">Muscle Group</label>
+      <label className="text-text-secondary text-sm block mb-1">Muscle Group</label>
       <select
         value={muscleGroup}
         onChange={(e) => setMuscleGroup(e.target.value)}
-        className="w-full bg-[#1a1a30] border border-border-light rounded-lg px-3 py-2 text-white text-sm mb-3 focus:border-accent focus:outline-none"
+        className="w-full bg-bg-card-alt border border-border-light rounded-lg px-3 py-2.5 text-white text-base mb-3 focus:border-accent focus:outline-none"
       >
         {MUSCLE_GROUPS.map((mg) => (
           <option key={mg} value={mg}>{mg}</option>
         ))}
       </select>
 
-      <label className="text-text-secondary text-xs block mb-1">Default Rest (seconds)</label>
+      <label className="text-text-secondary text-sm block mb-1">Default Rest (seconds)</label>
       <input
         type="number"
         inputMode="numeric"
         value={restSeconds}
         onChange={(e) => setRestSeconds(e.target.value)}
-        className="w-full bg-[#1a1a30] border border-border-light rounded-lg px-3 py-2 text-white text-sm mb-3 focus:border-accent focus:outline-none"
+        className="w-full bg-bg-card-alt border border-border-light rounded-lg px-3 py-2.5 text-white text-base mb-3 focus:border-accent focus:outline-none"
         min="0"
       />
 
-      <label className="text-text-secondary text-xs block mb-1">Notes (optional)</label>
+      <label className="text-text-secondary text-sm block mb-1">Notes (optional)</label>
       <input
         type="text"
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
-        className="w-full bg-[#1a1a30] border border-border-light rounded-lg px-3 py-2 text-white text-sm mb-4 focus:border-accent focus:outline-none"
+        className="w-full bg-bg-card-alt border border-border-light rounded-lg px-3 py-2.5 text-white text-base mb-4 focus:border-accent focus:outline-none"
       />
 
       <button
@@ -214,7 +214,7 @@ function ExerciseForm({ exercise, saving, error, onSave, onCancel }) {
       <button
         type="button"
         onClick={onCancel}
-        className="w-full bg-transparent text-text-secondary font-medium text-[13px] py-2 border-none cursor-pointer"
+        className="w-full bg-transparent text-text-secondary font-medium text-sm py-2 min-h-[44px] border-none cursor-pointer"
       >
         Cancel
       </button>

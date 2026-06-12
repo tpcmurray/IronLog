@@ -2,13 +2,13 @@ import MuscleGroupBadge from '../common/MuscleGroupBadge';
 
 export default function WorkoutPreview({ exercises, inProgress }) {
   return (
-    <div className="bg-[#1a1a30] border border-border rounded-2xl p-5 mb-6">
+    <div className="bg-bg-card-alt border border-border rounded-2xl p-5 mb-6">
       {inProgress ? (
-        <div className="text-progress-same text-xs tracking-widest uppercase mb-3">
+        <div className="text-progress-same text-xs font-medium tracking-widest uppercase mb-3">
           &#9203; Workout In Progress
         </div>
       ) : (
-        <div className="text-text-secondary text-xs tracking-widest uppercase mb-3">
+        <div className="text-text-secondary text-xs font-medium tracking-widest uppercase mb-3">
           Today&#39;s Workout
         </div>
       )}
@@ -26,7 +26,7 @@ export default function WorkoutPreview({ exercises, inProgress }) {
 function ExerciseStatus({ ex, inProgress }) {
   if (!inProgress) {
     return (
-      <span className="text-[#c0c0d8] text-sm">
+      <span className="text-text-primary text-base">
         {ex.exercise_name} &mdash; {ex.target_sets} sets
       </span>
     );

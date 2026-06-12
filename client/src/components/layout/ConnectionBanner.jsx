@@ -9,7 +9,7 @@ export default function ConnectionBanner() {
   if (!offline) return null;
 
   return (
-    <div className="fixed top-0 left-0 right-0 bg-[#92400e] text-white text-center text-sm font-medium py-2 z-[90]">
+    <div className="fixed top-0 left-0 right-0 bg-warning-deep text-white text-center text-base font-medium py-2 z-[90]">
       Connection lost — check your network
     </div>
   );

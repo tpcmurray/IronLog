@@ -22,7 +22,7 @@ export default function DayEditor({
 
   return (
     <div
-      className={`bg-[#1a1a30] border border-border rounded-xl mb-2 ${day.is_rest_day ? 'opacity-50' : ''}`}
+      className={`bg-bg-card-alt border border-border rounded-xl mb-2 ${day.is_rest_day ? 'opacity-70' : ''}`}
     >
       {/* Header — always visible */}
       <div
@@ -31,9 +31,9 @@ export default function DayEditor({
       >
         <div className="flex items-center gap-2">
           <span className="text-text-primary text-base font-semibold">{day.label}</span>
-          <span className="text-text-muted text-xs">{subtitle}</span>
+          <span className="text-text-muted text-sm">{subtitle}</span>
         </div>
-        <span className={expanded ? 'text-accent' : 'text-text-muted'}>
+        <span className={expanded ? 'text-accent-bright' : 'text-text-muted'}>
           {expanded ? '▼' : '▶'}
         </span>
       </div>
@@ -49,7 +49,7 @@ export default function DayEditor({
               onChange={onToggleRestDay}
               className="accent-accent"
             />
-            <span className="text-text-secondary text-xs">Rest day</span>
+            <span className="text-text-secondary text-sm">Rest day</span>
           </label>
 
           {!day.is_rest_day && (
@@ -71,7 +71,7 @@ export default function DayEditor({
               {/* Add exercise button */}
               <button
                 onClick={onAddExercise}
-                className="text-accent text-[13px] font-medium bg-transparent border-none cursor-pointer p-2"
+                className="text-accent-bright text-sm font-medium bg-transparent border-none cursor-pointer p-2 min-h-[44px]"
               >
                 + Add Exercise
               </button>

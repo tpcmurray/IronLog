@@ -15,8 +15,8 @@ export default function BottomNav() {
           to={tab.to}
           end={tab.to === '/'}
           className={({ isActive }) =>
-            `flex flex-col items-center justify-center gap-0.5 text-[11px] no-underline min-w-[44px] min-h-[44px] ${
-              isActive ? 'text-accent' : 'text-text-muted'
+            `flex flex-col items-center justify-center gap-0.5 text-xs font-medium no-underline min-w-[44px] min-h-[44px] ${
+              isActive ? 'text-accent-bright' : 'text-text-muted'
             }`
           }
         >

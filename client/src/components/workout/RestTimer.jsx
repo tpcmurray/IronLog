@@ -16,18 +16,18 @@ export default function RestTimer({ mode, remaining, elapsed, prescribed, nextSe
     >
       {/* Header label */}
       {isOverage ? (
-        <div className="text-[#92400e] text-[11px] tracking-[0.15em] uppercase mb-2">
+        <div className="text-warning-text text-xs font-medium tracking-[0.15em] uppercase mb-2">
           &#9888; Over prescribed rest ({formatTime(prescribed)})
         </div>
       ) : (
-        <div className="text-text-muted text-[11px] tracking-[0.15em] uppercase mb-2">
+        <div className="text-text-muted text-xs font-medium tracking-[0.15em] uppercase mb-2">
           Rest &mdash; {formatTime(prescribed)} prescribed
         </div>
       )}
 
       {/* Big timer digits */}
       <div
-        className={`font-mono text-[64px] font-bold leading-none ${
+        className={`font-mono text-[72px] font-bold leading-none ${
           isOverage ? 'text-progress-same' : 'text-text-primary'
         }`}
       >
@@ -36,11 +36,11 @@ export default function RestTimer({ mode, remaining, elapsed, prescribed, nextSe
 
       {/* Sub-label */}
       {isOverage ? (
-        <div className="text-[#92400e] text-xs mt-2">
+        <div className="text-warning-text text-base mt-3">
           Total rest: {formatTime(totalRest)}
         </div>
       ) : (
-        <div className="text-text-muted text-xs mt-2">
+        <div className="text-text-secondary text-base mt-3">
           Next: Set {nextSetNumber} of {targetSets}
         </div>
       )}
@@ -48,7 +48,7 @@ export default function RestTimer({ mode, remaining, elapsed, prescribed, nextSe
       {/* Dismiss */}
       <button
         onClick={onDismiss}
-        className="mt-4 bg-transparent text-text-secondary font-medium text-[13px] px-4 min-h-[44px] border-none cursor-pointer"
+        className="mt-4 bg-transparent text-text-secondary font-medium text-sm px-4 min-h-[44px] border-none cursor-pointer"
       >
         Dismiss Timer
       </button>

@@ -13,11 +13,11 @@ export default function SkipModal({ exerciseName, onConfirm, onCancel }) {
         <h3 className="text-text-primary text-lg font-semibold mb-1">
           Skip {exerciseName}?
         </h3>
-        <p className="text-text-muted text-[13px] mb-4">
+        <p className="text-text-muted text-sm mb-4">
           This exercise will be marked as skipped for today.
         </p>
 
-        <label className="text-text-secondary text-xs block mb-1.5">
+        <label className="text-text-secondary text-sm block mb-1.5">
           Reason (optional)
         </label>
         <input
@@ -25,18 +25,18 @@ export default function SkipModal({ exerciseName, onConfirm, onCancel }) {
           value={reason}
           onChange={(e) => setReason(e.target.value)}
           placeholder="e.g., shoulder pain"
-          className="w-full bg-bg-card border border-border-light rounded-lg px-4 py-3 text-white text-sm text-left focus:border-accent focus:outline-none mb-4"
+          className="w-full bg-bg-card border border-border-light rounded-lg px-4 py-3 text-white text-base text-left focus:border-accent focus:outline-none mb-4"
         />
 
         <button
           onClick={() => onConfirm(reason || undefined)}
-          className="w-full rounded-xl py-4 text-lg font-semibold text-white bg-[#dc2626] mb-2"
+          className="w-full rounded-xl py-4 text-lg font-semibold text-white bg-danger mb-2"
         >
           Skip Exercise
         </button>
         <button
           onClick={onCancel}
-          className="w-full bg-transparent text-text-secondary font-medium text-[13px] py-2"
+          className="w-full bg-transparent text-text-secondary font-medium text-sm py-2 min-h-[44px]"
         >
           Cancel
         </button>

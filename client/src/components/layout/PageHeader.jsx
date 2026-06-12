@@ -10,15 +10,15 @@ export default function PageHeader({ title, subtitle, back }) {
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 mb-4 bg-transparent border-none cursor-pointer"
         >
-          <span className="text-accent text-lg">&larr;</span>
-          <span className="text-accent text-sm">Back</span>
+          <span className="text-accent-bright text-lg">&larr;</span>
+          <span className="text-accent-bright text-base">Back</span>
         </button>
       )}
       {title && (
-        <h1 className="text-[22px] font-bold text-white m-0">{title}</h1>
+        <h1 className="text-[28px] font-bold text-white m-0">{title}</h1>
       )}
       {subtitle && (
-        <p className="text-[13px] text-text-muted mt-1 mb-0">{subtitle}</p>
+        <p className="text-sm text-text-muted mt-1 mb-0">{subtitle}</p>
       )}
     </div>
   );
