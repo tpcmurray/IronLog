@@ -229,20 +229,26 @@ function CellContent({ exercises, onTapExercise }) {
     return <span className="text-text-muted">&mdash;</span>;
   }
 
-  return exercises.map((ex, i) => (
-    <div key={i} className={ex.status === 'skipped' ? 'opacity-60 line-through' : ''}>
-      <div
-        className="font-semibold text-text-primary mb-0.5 cursor-pointer"
-        onClick={() => onTapExercise(ex.exerciseId)}
-      >
-        {ex.exerciseName}
+  return exercises.map((ex, i) => {
+    // Logged sets are always valid. Only mark an exercise as skipped
+    // (struck through) when it has no sets at all.
+    const hasSets = ex.sets && ex.sets.length > 0;
+    const showSkipped = ex.status === 'skipped' && !hasSets;
+    return (
+      <div key={i} className={showSkipped ? 'opacity-60 line-through' : ''}>
+        <div
+          className="font-semibold text-text-primary mb-0.5 cursor-pointer"
+          onClick={() => onTapExercise(ex.exerciseId)}
+        >
+          {ex.exerciseName}
+        </div>
+        {ex.sets.map((s, j) => (
+          <div key={j}>{compactSet(s)}</div>
+        ))}
+        {showSkipped && (
+          <div className="text-text-muted text-xs italic">skipped</div>
+        )}
       </div>
-      {ex.sets.map((s, j) => (
-        <div key={j}>{compactSet(s)}</div>
-      ))}
-      {ex.status === 'skipped' && (
-        <div className="text-text-muted text-xs italic">skipped</div>
-      )}
-    </div>
-  ));
+    );
+  });
 }
