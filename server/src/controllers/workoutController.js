@@ -390,7 +390,15 @@ async function buildCompletionStats(client, workoutId) {
   let skipped = 0;
 
   for (const ex of exercises) {
-    if (ex.status === 'skipped') {
+    // Get current session sets
+    const { rows: currentSets } = await client.query(
+      'SELECT set_number, weight_lbs, reps FROM set_logs WHERE session_exercise_id = $1 ORDER BY set_number',
+      [ex.id]
+    );
+
+    // Only count as skipped when no sets were logged. An exercise with logged
+    // sets is a real (partial) effort even if its status is 'skipped'.
+    if (ex.status === 'skipped' && currentSets.length === 0) {
       skipped++;
       details.push({
         exercise_id: ex.exercise_id,
@@ -401,12 +409,6 @@ async function buildCompletionStats(client, workoutId) {
       });
       continue;
     }
-
-    // Get current session sets
-    const { rows: currentSets } = await client.query(
-      'SELECT set_number, weight_lbs, reps FROM set_logs WHERE session_exercise_id = $1 ORDER BY set_number',
-      [ex.id]
-    );
 
     // Get last session for comparison
     const lastSession = await fetchLastSession(client, ex.exercise_id, workoutId);

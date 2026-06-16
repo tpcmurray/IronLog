@@ -211,6 +211,45 @@ describe('PUT /api/workouts/:id/complete', () => {
     expect(mockClient.release).toHaveBeenCalled();
   });
 
+  it('counts a skipped-status exercise that has logged sets as a real effort', async () => {
+    const mockClient = createMockClient([
+      {}, // BEGIN
+      { rows: [{ id: WID, completed_at: null }] }, // Verify session
+      {}, // Mark pending as skipped
+      {}, // Set completed_at
+      {}, // COMMIT
+      // buildCompletionStats: workout
+      { rows: [{ id: WID, started_at: '2026-01-25T14:00:00Z', completed_at: '2026-01-25T15:00:00Z' }] },
+      // buildCompletionStats: exercises (status skipped but it has sets)
+      { rows: [{ id: 'se1', exercise_id: 'ex1', status: 'skipped', skip_reason: 'ran out of time', exercise_name: 'Stairs', muscle_group: 'legs' }] },
+      // set_logs for se1 (fetched first now)
+      { rows: [
+        { set_number: 1, weight_lbs: '1.0', reps: 8 },
+        { set_number: 2, weight_lbs: '1.0', reps: 5 },
+        { set_number: 3, weight_lbs: '1.0', reps: 6 },
+      ] },
+      // fetchLastSession: no prior session
+      { rows: [] },
+    ]);
+
+    pool.connect.mockResolvedValue(mockClient);
+
+    // buildWorkoutResponse (uses pool)
+    pool.query.mockResolvedValueOnce({
+      rows: [{ id: WID, program_day_id: DAY_ID, started_at: '2026-01-25T14:00:00Z', completed_at: '2026-01-25T15:00:00Z', notes: null }],
+    });
+    pool.query.mockResolvedValueOnce({ rows: [] }); // exercises
+
+    const res = await request(app).put(`/api/workouts/${WID}/complete`);
+
+    expect(res.status).toBe(200);
+    const prog = res.body.data.progression;
+    expect(prog.skipped).toBe(0);
+    expect(prog.progressed).toBe(1); // first_time counts as progressed
+    expect(prog.details[0].status).not.toBe('skipped');
+    expect(prog.details[0].exercise_name).toBe('Stairs');
+  });
+
   it('returns 404 when workout not found', async () => {
     const mockClient = createMockClient([
       {}, // BEGIN
