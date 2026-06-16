@@ -203,9 +203,18 @@ function WorkoutContent({ workout }) {
   const handleSkip = useCallback(
     async (reason) => {
       setShowSkipModal(false);
-      await skipCurrentExercise(reason);
       timer.reset();
       setPendingRestDuration(null);
+
+      const setsLogged = currentExercise?.sets?.length || 0;
+      if (setsLogged > 0) {
+        // Already did some sets — keep them and finish the exercise early
+        // (server marks it 'partial'), rather than discarding them.
+        await completeCurrentExercise();
+      } else {
+        // No sets logged — skip the whole exercise.
+        await skipCurrentExercise(reason);
+      }
 
       if (isLastExercise) {
         await finishWorkout();
@@ -214,7 +223,7 @@ function WorkoutContent({ workout }) {
         goNext();
       }
     },
-    [skipCurrentExercise, timer, isLastExercise, goNext, finishWorkout]
+    [currentExercise, completeCurrentExercise, skipCurrentExercise, timer, isLastExercise, goNext, finishWorkout]
   );
 
   const handlePrev = useCallback(() => {
@@ -287,6 +296,8 @@ function WorkoutContent({ workout }) {
       {showSkipModal && (
         <SkipModal
           exerciseName={currentExercise.exercise_name}
+          setsLogged={currentExercise.sets?.length || 0}
+          targetSets={currentExercise.target_sets}
           onConfirm={handleSkip}
           onCancel={() => setShowSkipModal(false)}
         />
