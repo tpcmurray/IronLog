@@ -19,3 +19,7 @@ export function getLastSession(exerciseId) {
 export function getExerciseHistory(exerciseId, { limit = 10, offset = 0 } = {}) {
   return get(`/exercises/${exerciseId}/history?limit=${limit}&offset=${offset}`);
 }
+
+export function getExerciseHistoryStats(exerciseId) {
+  return get(`/exercises/${exerciseId}/history-stats`);
+}

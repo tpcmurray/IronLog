@@ -155,8 +155,73 @@ describe('GET /api/exercises/:id/history', () => {
     expect(res.body.data.exercise.name).toBe('Bench Press');
     expect(res.body.data.sessions).toHaveLength(1);
     expect(res.body.data.sessions[0].progression_status).toBe('first_time');
+    expect(res.body.data.sessions[0].metrics).toEqual({
+      total_reps: 8, volume: 760, top_weight: 95, est_1rm: 120,
+    });
+    expect(res.body.data.sessions[0].main_weight).toBe(95);
+    expect(res.body.data.sessions[0].reps_at_main_weight).toBe(8);
     expect(res.body.data.total).toBe(1);
     expect(res.body.data.limit).toBe(5);
     expect(res.body.data.offset).toBe(0);
+  });
+});
+
+describe('GET /api/exercises/:id/history-stats', () => {
+  it('returns series, rep records, and a recent trend', async () => {
+    // Verify exercise
+    pool.query.mockResolvedValueOnce({ rows: [{ id: UUID1 }] });
+    // Sessions (oldest first)
+    pool.query.mockResolvedValueOnce({
+      rows: [
+        { session_exercise_id: 'se1', date: '2026-05-01T15:00:00Z' },
+        { session_exercise_id: 'se2', date: '2026-05-08T15:00:00Z' },
+      ],
+    });
+    // All sets for those sessions
+    pool.query.mockResolvedValueOnce({
+      rows: [
+        { session_exercise_id: 'se1', weight_lbs: '77.0', reps: 6 },
+        { session_exercise_id: 'se1', weight_lbs: '77.0', reps: 7 }, // se1: 13 reps @ 77
+        { session_exercise_id: 'se2', weight_lbs: '77.0', reps: 8 },
+        { session_exercise_id: 'se2', weight_lbs: '77.0', reps: 9 }, // se2: 17 reps @ 77
+      ],
+    });
+
+    const res = await request(app).get(`/api/exercises/${UUID1}/history-stats`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.series).toHaveLength(2);
+    expect(res.body.data.series[1].volume).toBe(77 * 17);
+    // Rep record at 77 lbs is the later, higher session
+    expect(res.body.data.records['77'].best_total_reps).toBe(17);
+    expect(res.body.data.records['77'].session_exercise_id).toBe('se2');
+    expect(res.body.data.current_prs).toHaveLength(1);
+    expect(res.body.data.current_prs[0].weight).toBe(77);
+    // Volume trend over the 2-session window: 1001 -> 1309 = +31%
+    expect(res.body.data.trend).toEqual({ metric: 'volume', window: 2, change_pct: 31 });
+  });
+
+  it('returns empty stats when there is no history', async () => {
+    pool.query.mockResolvedValueOnce({ rows: [{ id: UUID1 }] }); // exercise
+    pool.query.mockResolvedValueOnce({ rows: [] }); // no sessions
+
+    const res = await request(app).get(`/api/exercises/${UUID1}/history-stats`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.series).toEqual([]);
+    expect(res.body.data.current_prs).toEqual([]);
+    expect(res.body.data.trend).toBeNull();
+  });
+
+  it('returns 404 when the exercise does not exist', async () => {
+    pool.query.mockResolvedValueOnce({ rows: [] });
+
+    const res = await request(app).get(`/api/exercises/${UUID1}/history-stats`);
+    expect(res.status).toBe(404);
+  });
+
+  it('returns 400 for an invalid uuid', async () => {
+    const res = await request(app).get('/api/exercises/not-a-uuid/history-stats');
+    expect(res.status).toBe(400);
   });
 });

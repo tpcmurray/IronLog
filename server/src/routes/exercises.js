@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { listExercises, createExercise, updateExercise, getLastSession, getExerciseHistory } = require('../controllers/exerciseController');
+const { listExercises, createExercise, updateExercise, getLastSession, getExerciseHistory, getExerciseHistoryStats } = require('../controllers/exerciseController');
 const { requireFields, validateUuid, validatePositiveNumber } = require('../middleware/validate');
 
 const router = Router();
@@ -26,6 +26,11 @@ router.get('/:id/last-session',
 router.get('/:id/history',
   validateUuid('id'),
   getExerciseHistory
+);
+
+router.get('/:id/history-stats',
+  validateUuid('id'),
+  getExerciseHistoryStats
 );
 
 module.exports = router;
