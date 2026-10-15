@@ -1,6 +1,6 @@
 import { formatWeight } from '../../utils/formatters';
 
-export default function SetList({ sets, targetSets, nextSetNumber, isComplete }) {
+export default function SetList({ sets, targetSets, nextSetNumber, isComplete, children }) {
   const totalSets = Math.max(targetSets, sets.length);
 
   return (
@@ -24,6 +24,9 @@ export default function SetList({ sets, targetSets, nextSetNumber, isComplete })
           <span className="text-progress-up text-sm">&#10003;</span>
         </div>
       ))}
+
+      {/* Current set slot (rest timer or input) */}
+      {children}
 
       {/* Upcoming sets (after current) */}
       {!isComplete &&

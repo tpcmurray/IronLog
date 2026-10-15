@@ -69,36 +69,36 @@ export default function ExerciseView({
         />
       )}
 
-      {/* Set List */}
+      {/* Set List — current-set card (timer or input) sits in its slot */}
       <SetList
         sets={exercise.sets || []}
         targetSets={exercise.target_sets}
         nextSetNumber={nextSetNumber}
         isComplete={isComplete}
-      />
+      >
+        {showTimer && (
+          <RestTimer
+            mode={timer.mode}
+            remaining={timer.remaining}
+            elapsed={timer.elapsed}
+            prescribed={timer.prescribed}
+            nextSetNumber={nextSetNumber}
+            targetSets={exercise.target_sets}
+            lastSession={isComplete ? null : exercise.last_session}
+            onDismiss={onDismissTimer}
+          />
+        )}
 
-      {/* Timer */}
-      {showTimer && (
-        <RestTimer
-          mode={timer.mode}
-          remaining={timer.remaining}
-          elapsed={timer.elapsed}
-          prescribed={timer.prescribed}
-          nextSetNumber={nextSetNumber}
-          targetSets={exercise.target_sets}
-          onDismiss={onDismissTimer}
-        />
-      )}
-
-      {/* Current set input (when not complete and timer not running) */}
-      {!isComplete && !showTimer && (
-        <SetInput
-          setNumber={nextSetNumber}
-          targetSets={exercise.target_sets}
-          prefill={prefill}
-          onLogSet={onLogSet}
-        />
-      )}
+        {!isComplete && !showTimer && (
+          <SetInput
+            setNumber={nextSetNumber}
+            targetSets={exercise.target_sets}
+            prefill={prefill}
+            lastSession={exercise.last_session}
+            onLogSet={onLogSet}
+          />
+        )}
+      </SetList>
 
       {/* Exercise completion actions */}
       {isComplete && (

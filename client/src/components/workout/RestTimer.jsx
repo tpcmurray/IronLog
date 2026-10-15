@@ -1,6 +1,7 @@
 import { formatTime } from '../../utils/formatters';
+import LastTimeSet from './LastTimeSet';
 
-export default function RestTimer({ mode, remaining, elapsed, prescribed, nextSetNumber, targetSets, onDismiss }) {
+export default function RestTimer({ mode, remaining, elapsed, prescribed, nextSetNumber, targetSets, lastSession, onDismiss }) {
   if (mode === 'idle') return null;
 
   const isOverage = mode === 'overage';
@@ -8,7 +9,7 @@ export default function RestTimer({ mode, remaining, elapsed, prescribed, nextSe
 
   return (
     <div
-      className={`rounded-2xl p-6 text-center my-6 ${
+      className={`rounded-2xl p-6 text-center mb-2 ${
         isOverage
           ? 'bg-gradient-to-br from-[#451a03] to-[#1c0a00] border border-[#92400e]'
           : 'bg-gradient-to-br from-[#1e293b] to-[#0f172a] border border-[#334155]'
@@ -44,6 +45,9 @@ export default function RestTimer({ mode, remaining, elapsed, prescribed, nextSe
           Next: Set {nextSetNumber} of {targetSets}
         </div>
       )}
+
+      {/* Last session reference for the upcoming set */}
+      <LastTimeSet lastSession={lastSession} setNumber={nextSetNumber} />
 
       {/* Dismiss */}
       <button

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import RpeSelector from './RpeSelector';
+import LastTimeSet from './LastTimeSet';
 
-export default function SetInput({ setNumber, targetSets, prefill, onLogSet }) {
+export default function SetInput({ setNumber, targetSets, prefill, lastSession, onLogSet }) {
   const [weight, setWeight] = useState(prefill.weight);
   const [reps, setReps] = useState(prefill.reps);
   const [rpe, setRpe] = useState(null);
@@ -31,10 +32,12 @@ export default function SetInput({ setNumber, targetSets, prefill, onLogSet }) {
   }
 
   return (
-    <div className="bg-bg-input border border-accent rounded-lg p-4 mb-4">
+    <div className="bg-bg-input border border-accent rounded-lg p-4 mb-2">
       <div className="text-accent-bright text-xs font-semibold tracking-wider mb-3">
         SET {setNumber} of {targetSets} &mdash; NOW
       </div>
+
+      <LastTimeSet lastSession={lastSession} setNumber={setNumber} variant="line" />
 
       <div className="grid grid-cols-2 gap-3 mb-4">
         <div>
